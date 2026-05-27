@@ -467,55 +467,19 @@ font-weight: 600 !important; font-size: 16px !important; display: flex; justify-
 
 #hn-voice-overlay {
     display: none; position: absolute; top: 60px; left: 0; width: 100%; height: calc(100% - 60px);
-    background:
-      radial-gradient(circle at 50% 12%, rgba(255, 220, 50, 0.18), transparent 26%),
-      radial-gradient(circle at 50% 84%, rgba(255, 220, 50, 0.08), transparent 34%),
-      linear-gradient(180deg, rgba(10,10,10,0.98), rgba(22,22,22,0.96));
-    backdrop-filter: var(--hn-window-overlay-backdrop); -webkit-backdrop-filter: var(--hn-window-overlay-backdrop);
+    background: var(--hn-window-overlay-bg); backdrop-filter: var(--hn-window-overlay-backdrop); -webkit-backdrop-filter: var(--hn-window-overlay-backdrop);
     z-index: 100; flex-direction: column; align-items: center; justify-content: center;
     animation: hnFadeIn 0.3s ease;
-    overflow: hidden;
-    color: #f8fafc;
 }
 #hn-voice-overlay::before {
     content: "";
     position: absolute;
-    top: 26px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: min(92%, 332px);
-    height: 142px;
-    background-image: radial-gradient(circle, rgba(255,255,255,0.72) 0 1.4px, transparent 1.8px);
-    background-size: 18px 18px;
-    opacity: 0.16;
-    filter: blur(0.2px);
-    mask-image: linear-gradient(180deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.46) 65%, transparent 100%);
+    top: -3px;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: var(--hn-window-overlay-bg);
     pointer-events: none;
-}
-#hn-voice-overlay::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    bottom: 42px;
-    transform: translateX(-50%);
-    width: 200px;
-    height: 200px;
-    border-radius: 999px;
-    background: radial-gradient(circle, rgba(255, 220, 50, 0.2), transparent 68%);
-    filter: blur(18px);
-    opacity: 0.52;
-    pointer-events: none;
-}
-.hn-voice-mode-label {
-    position: absolute;
-    left: 50%;
-    top: 30px;
-    transform: translateX(-50%);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.66);
 }
 
 @keyframes hnFadeIn {
@@ -523,215 +487,203 @@ font-weight: 600 !important; font-size: 16px !important; display: flex; justify-
   to { opacity: 1; }
 }
 
-#hn-close-voice-btn { position: absolute; top: 18px; right: 24px; border: none; cursor: pointer; padding: 8px; border-radius: 50%; background: rgba(255,255,255,0.08); display: flex; transition: 0.2s; z-index: 2;}
-#hn-close-voice-btn:hover { background: rgba(255,255,255,0.14); }
-#hn-close-voice-btn svg { width: 16px; height: 16px; fill: #ffffff; }
+#hn-close-voice-btn { position: absolute; top: 20px; right: 24px; background: none; border: none; cursor: pointer; padding: 8px; border-radius: 50%; background: rgba(0,0,0,0.05); display: flex; transition: 0.2s;}
+#hn-close-voice-btn:hover { background: rgba(0,0,0,0.1); }
+#hn-close-voice-btn svg { width: 16px; height: 16px; fill: #333; }
 .hn-orb-container {
-    position: relative;
-    width: min(86%, 310px);
-    height: 232px;
-    margin-bottom: 12px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: relative; width: 120px; height: 120px; margin-bottom: 30px; cursor: pointer;
 }
 .hn-orb {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.35s ease, filter 0.35s ease;
+    width: 100%; height: 100%; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #ffef99, #ffdc32, #dca800);
+    box-shadow: 0 15px 35px rgba(255, 220, 50, 0.4), inset 0 0 20px rgba(255,255,255,0.8);
+    transition: all 0.5s ease;
 }
-.hn-orb-field {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    width: min(100%, 340px);
-    height: 92px;
-    opacity: 0.44;
-    pointer-events: none;
-}
-.hn-orb-field--top {
-    top: -2px;
-    background-image: radial-gradient(circle, rgba(255,255,255,0.82) 0 1.4px, transparent 1.85px);
-    background-size: 18px 18px;
-    clip-path: polygon(0 24%, 12% 6%, 30% 18%, 50% 0, 68% 17%, 88% 6%, 100% 26%, 100% 100%, 0 100%);
-    filter: blur(0.2px);
-}
-.hn-orb-field--bottom {
-    bottom: 10px;
-    background-image: radial-gradient(circle, rgba(255,255,255,0.08) 0 1.2px, transparent 1.7px);
-    background-size: 16px 16px;
-    opacity: 0.18;
-    clip-path: ellipse(46% 50% at 50% 50%);
-}
-.hn-orb-core {
-    position: relative;
-    width: 152px;
-    height: 152px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    background:
-      radial-gradient(circle at 50% 44%, rgba(255,255,255,0.16), rgba(255, 220, 50, 0.36) 28%, rgba(255, 220, 50, 0.12) 42%, rgba(18, 18, 18, 0.96) 80%);
-    border: 1px solid rgba(255, 220, 50, 0.34);
-    box-shadow:
-      0 20px 48px rgba(0, 0, 0, 0.34),
-      0 0 34px rgba(255, 220, 50, 0.1),
-      inset 0 0 28px rgba(255,255,255,0.08);
-}
-.hn-orb-core::before {
-    content: "";
-    position: absolute;
-    inset: 11px;
-    border-radius: 50%;
-    border: 1px solid rgba(255,255,255,0.1);
-}
-.hn-orb-core::after {
-    content: "";
-    position: absolute;
-    inset: -16px;
-    border-radius: 50%;
-    border: 1px solid rgba(255, 220, 50, 0.16);
-}
-.hn-voice-wave-svg {
-    position: relative;
-    width: 98px;
-    height: 48px;
-    z-index: 1;
-    overflow: visible;
-    filter: drop-shadow(0 0 16px rgba(255, 220, 50, 0.42));
-}
-.hn-wave-path {
-    fill: none;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    transform-box: fill-box;
-    transform-origin: center;
-}
-.hn-wave-path--gold {
-    stroke: rgba(255, 220, 50, 0.95);
-    stroke-width: 5.5;
-}
-.hn-wave-path--light {
-    stroke: rgba(255, 248, 214, 0.88);
-    stroke-width: 3.2;
-}
-.hn-wave-glow {
-    position: absolute;
-    inset: auto;
-    width: 82px;
-    height: 82px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255, 220, 50, 0.46), transparent 70%);
-    filter: blur(13px);
-    opacity: 0.62;
-}
-.hn-orb-listening .hn-orb-core {
-    box-shadow:
-      0 24px 58px rgba(0, 0, 0, 0.38),
-      0 0 44px rgba(255, 220, 50, 0.18),
-      inset 0 0 30px rgba(255,255,255,0.16);
-}
-.hn-orb-listening .hn-wave-path {
-    animation: hnVoiceWaveListening 1.55s ease-in-out infinite;
-}
-.hn-orb-listening .hn-wave-path--light {
-    animation-delay: 0.16s;
-}
-.hn-orb-thinking .hn-wave-path {
-    animation: hnVoiceWaveThinking 2.25s ease-in-out infinite;
-}
-.hn-orb-thinking .hn-wave-path--light {
-    animation-delay: 0.22s;
-}
-.hn-orb-speaking .hn-wave-path {
-    animation: hnVoiceWaveSpeaking 0.9s ease-in-out infinite;
-}
-.hn-orb-speaking .hn-wave-path--light {
-    animation-delay: 0.12s;
-}
-.hn-orb-speaking .hn-orb-core {
-    border-color: rgba(255, 220, 50, 0.58);
-    box-shadow:
-      0 24px 58px rgba(220, 168, 0, 0.25),
-      inset 0 0 36px rgba(255,255,255,0.22);
-}
-.hn-orb-thinking .hn-orb-field--top {
-    opacity: 0.5;
-    animation: hnVoiceFieldDrift 3.2s linear infinite;
-}
-.hn-orb-speaking .hn-orb-field--top {
-    opacity: 0.58;
-    animation: hnVoiceFieldPulse 1s ease-in-out infinite;
-}
-.hn-orb-listening .hn-orb-field--top {
-    animation: hnVoiceFieldPulse 1.6s ease-in-out infinite;
-}
-@keyframes hnVoiceWaveListening {
-  0%, 100% { transform: scaleY(0.82) translateY(0); opacity: 0.86; }
-  50% { transform: scaleY(1.08) translateY(-1px); opacity: 1; }
-}
-@keyframes hnVoiceWaveThinking {
-  0%, 100% { transform: scaleX(0.94) scaleY(0.72); opacity: 0.76; }
-  50% { transform: scaleX(1.02) scaleY(0.94); opacity: 0.92; }
-}
-@keyframes hnVoiceWaveSpeaking {
-  0%, 100% { transform: scaleX(0.95) scaleY(0.78); opacity: 0.9; }
-  35% { transform: scaleX(1.04) scaleY(1.26); opacity: 1; }
-  65% { transform: scaleX(0.98) scaleY(1.08); opacity: 0.96; }
-}
-@keyframes hnVoiceFieldPulse {
-  0%, 100% { transform: translateX(-50%) scaleY(0.94); opacity: 0.34; }
-  50% { transform: translateX(-50%) scaleY(1.08); opacity: 0.58; }
-}
-@keyframes hnVoiceFieldDrift {
-  0% { transform: translateX(-50%) translateY(0); }
-  50% { transform: translateX(-50%) translateY(4px); }
-  100% { transform: translateX(-50%) translateY(0); }
+.hn-orb-listening { animation: hnOrbListen 1.5s infinite ease-in-out; }
+
+@keyframes hnOrbListen {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 220, 50, 0.6); }
+  50% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(255, 220, 50, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 220, 50, 0); }
 }
 
+.hn-orb-thinking {
+    background: radial-gradient(circle at 30% 30%, #a1c4fd, #c2e9fb);
+    animation: hnOrbSpin 2s linear infinite; box-shadow: 0 10px 30px rgba(161, 196, 253, 0.6);
+}
+
+@keyframes hnOrbSpin {
+  100% { transform: rotate(360deg); }
+}
+
+.hn-orb-speaking {
+    background: radial-gradient(circle at 30% 30%, #a1c4fd, #3b82f6, #1d4ed8);
+    animation: hnOrbSpeak 1s infinite alternate ease-in-out; box-shadow: 0 15px 40px rgba(59, 130, 246, 0.5);
+}
+
+@keyframes hnOrbSpeak {
+  0% { transform: scale(1); filter: brightness(1); }
+  100% { transform: scale(1.1); filter: brightness(1.2); box-shadow: 0 20px 50px rgba(59, 130, 246, 0.8); }
+}
+
+#hn-voice-status { font-size: 16px; font-weight: 600; color: #1a1a1a; margin-bottom: 10px; letter-spacing: 0.5px;}
 #hn-voice-transcript {
     font-size: 14px;
-    color: rgba(255,255,255,0.78);
-    width: min(82%, 320px);
-    max-width: 82%;
+    color: #666;
+    width: min(84%, 340px);
+    max-width: 84%;
     text-align: center;
-    min-height: 54px;
+    min-height: 40px;
     font-style: italic;
     line-height: 1.5;
-    transition: font-size 0.2s ease, color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
-    padding: 12px 16px;
-    border-radius: 18px;
-    border: 1px solid rgba(255,255,255,0.08);
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    transition: font-size 0.2s ease, color 0.2s ease;
 }
 #hn-voice-transcript.hn-voice-transcript-active {
     font-size: 13px;
     line-height: 1.52;
-    color: rgba(255,255,255,0.92);
+    color: #5b6472;
     display: -webkit-box;
     -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    border-color: rgba(255,255,255,0.14);
-    background: rgba(255,255,255,0.08);
 }
 #hn-voice-send-btn {
-    display: none; background: linear-gradient(135deg, rgba(255, 220, 50, 0.96), rgba(224, 170, 0, 0.96)) !important; color: #101010 !important;
+    display: none; background: var(--hn-header-color) !important; color: #ffffff !important;
     padding: 12px 28px !important; border-radius: 24px !important;
     font-weight: 600 !important; cursor: pointer; border: none !important;
-    margin-top: 18px; box-shadow: 0 12px 32px rgba(0,0,0,0.22); transition: 0.2s;
+    margin-top: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); transition: 0.2s;
 }
 #hn-voice-send-btn:hover { transform: scale(1.05); }
-#hn-voice-status { font-size: 16px; font-weight: 600; color: #ffffff; margin-bottom: 12px; letter-spacing: 0.5px;}
+
+#hn-call-overlay {
+    display: none; position: absolute; top: 60px; left: 0; width: 100%; height: calc(100% - 60px);
+    background:
+      radial-gradient(circle at 50% 14%, rgba(255, 220, 50, 0.12), transparent 26%),
+      linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,250,252,0.96));
+    backdrop-filter: var(--hn-window-overlay-backdrop); -webkit-backdrop-filter: var(--hn-window-overlay-backdrop);
+    z-index: 110; flex-direction: column; align-items: center; justify-content: center;
+    padding: 28px 20px 20px;
+    box-sizing: border-box;
+    animation: hnFadeIn 0.3s ease;
+}
+#hn-close-call-btn { position: absolute; top: 20px; right: 24px; background: none; border: none; cursor: pointer; padding: 8px; border-radius: 50%; background: rgba(0,0,0,0.05); display: flex; transition: 0.2s;}
+#hn-close-call-btn:hover { background: rgba(0,0,0,0.1); }
+#hn-close-call-btn svg { width: 16px; height: 16px; fill: #333; }
+.hn-call-panel {
+    width: 100%;
+    max-width: 340px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    color: #1a1a1a;
+}
+.hn-call-wave-hero {
+    margin: 8px 0 28px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    min-height: 170px;
+}
+.hn-call-wave-field {
+    position: absolute;
+    top: 0;
+    width: min(100%, 320px);
+    height: 92px;
+    background-image: radial-gradient(circle, rgba(71,85,105,0.28) 0 1.3px, transparent 1.7px);
+    background-size: 16px 16px;
+    mask-image: linear-gradient(180deg, rgba(0,0,0,0.92), rgba(0,0,0,0.2) 70%, transparent);
+    opacity: 0.44;
+    pointer-events: none;
+}
+.hn-call-wave-core {
+    position: relative;
+    width: 164px;
+    height: 164px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 42%, rgba(255,255,255,0.96), rgba(255, 239, 153, 0.88) 28%, rgba(255, 220, 50, 0.54) 46%, rgba(255,255,255,0.9) 74%, rgba(255,255,255,0.98) 100%);
+    border: 1px solid rgba(220, 168, 0, 0.45);
+    box-shadow: 0 24px 60px rgba(255, 220, 50, 0.22), inset 0 0 24px rgba(255,255,255,0.86);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.hn-call-wave-core::before {
+    content: "";
+    position: absolute;
+    inset: 14px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.76);
+}
+.hn-call-wave-svg {
+    width: 94px;
+    height: 46px;
+    filter: drop-shadow(0 0 10px rgba(255, 220, 50, 0.45));
+}
+.hn-call-wave-path {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+.hn-call-wave-path--gold {
+    stroke: #facc15;
+    stroke-width: 5.5;
+}
+.hn-call-wave-path--light {
+    stroke: rgba(255,255,255,0.95);
+    stroke-width: 3.4;
+}
+.hn-call-wave-core.is-ready .hn-call-wave-path,
+.hn-call-wave-core.is-connecting .hn-call-wave-path,
+.hn-call-wave-core.is-live .hn-call-wave-path {
+    animation: hnCallWavePulse 1.3s ease-in-out infinite;
+}
+.hn-call-wave-core.is-live .hn-call-wave-path--light {
+    animation-delay: 0.16s;
+}
+@keyframes hnCallWavePulse {
+    0%, 100% { transform: scaleY(0.82) translateY(0); opacity: 0.92; }
+    50% { transform: scaleY(1.14) translateY(-1px); opacity: 1; }
+}
+#hn-call-status {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+}
+#hn-call-transcript {
+    font-size: 14px;
+    color: #666;
+    width: min(84%, 340px);
+    max-width: 84%;
+    text-align: center;
+    min-height: 40px;
+    font-style: italic;
+    line-height: 1.5;
+    transition: font-size 0.2s ease, color 0.2s ease;
+}
+#hn-call-transcript.hn-call-transcript-active {
+    font-size: 13px;
+    line-height: 1.52;
+    color: #5b6472;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+#hn-call-action-btn {
+    display: none; background: var(--hn-header-color) !important; color: #ffffff !important;
+    padding: 12px 28px !important; border-radius: 24px !important;
+    font-weight: 600 !important; cursor: pointer; border: none !important;
+    margin-top: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); transition: 0.2s;
+}
+#hn-call-action-btn:hover { transform: scale(1.05); }
+#hn-call-action-btn.hn-call-action-btn--danger {
+    background: #fef2f2 !important;
+    color: #991b1b !important;
+}
 </style>
 
 <div id="heynaj-chat-widget">
@@ -742,7 +694,7 @@ font-weight: 600 !important; font-size: 16px !important; display: flex; justify-
 <span id="hn-header-title">[AI_NAME]</span>
 </div>
 <div class="hn-header-actions">
-<button class="hn-header-icon-btn hn-header-icon-btn--voice" id="hn-header-voice-btn" onclick="hnOpenVoiceScreen()" title="Talk to AI" aria-label="Talk to AI"><svg viewBox="0 0 24 24"><path d="M6.62 10.79a15.91 15.91 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.11.37 2.3.56 3.58.56a1 1 0 011 1V20a1 1 0 01-1 1C10.3 21 3 13.7 3 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.28.19 2.47.56 3.58a1 1 0 01-.24 1.01l-2.2 2.2z"/></svg></button>
+<button class="hn-header-icon-btn hn-header-icon-btn--voice" id="hn-header-voice-btn" onclick="hnOpenVoiceCallScreen()" title="Talk to AI" aria-label="Talk to AI"><svg viewBox="0 0 24 24"><path d="M6.62 10.79a15.91 15.91 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.11.37 2.3.56 3.58.56a1 1 0 011 1V20a1 1 0 01-1 1C10.3 21 3 13.7 3 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.28.19 2.47.56 3.58a1 1 0 01-.24 1.01l-2.2 2.2z"/></svg></button>
 <button class="hn-header-icon-btn" onclick="hnRestartChat()" title="Restart Chat"><svg viewBox="0 0 24 24"><path d="M17.65 6.35A7.95 7.95 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></button>
 <button class="hn-header-icon-btn" onclick="hnToggleChat()" title="Minimize"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
 </div>
@@ -763,29 +715,36 @@ font-weight: 600 !important; font-size: 16px !important; display: flex; justify-
 
 <div id="hn-voice-overlay">
     <button id="hn-close-voice-btn" onclick="hnCloseVoiceScreen()" title="Return to text chat"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
-    <div class="hn-voice-mode-label">Talk to AI</div>
     <div class="hn-orb-container" onclick="hnOrbClicked()">
-        <div id="hn-main-orb" class="hn-orb">
-            <div class="hn-orb-field hn-orb-field--top"></div>
-            <div class="hn-orb-core">
-                <div class="hn-wave-glow"></div>
-                <svg class="hn-voice-wave-svg" viewBox="0 0 120 56" aria-hidden="true">
-                    <path class="hn-wave-path hn-wave-path--gold" d="M8 28C16 28 18 16 26 16C34 16 36 40 44 40C52 40 54 12 62 12C70 12 72 44 80 44C88 44 90 20 98 20C106 20 108 28 112 28" />
-                    <path class="hn-wave-path hn-wave-path--light" d="M10 30C18 30 20 20 28 20C36 20 38 36 46 36C54 36 56 18 64 18C72 18 74 38 82 38C90 38 92 24 100 24C106 24 108 28 110 28" />
-                </svg>
-            </div>
-            <div class="hn-orb-field hn-orb-field--bottom"></div>
-        </div>
+        <div id="hn-main-orb" class="hn-orb"></div>
     </div>
-    <div id="hn-voice-status">Tap waveform to speak</div>
+    <div id="hn-voice-status">Tap orb to start</div>
     <div id="hn-voice-transcript"></div>
     <button id="hn-voice-send-btn" onclick="hnSendVoiceNow()">Send Now</button>
+</div>
+
+<div id="hn-call-overlay">
+    <button id="hn-close-call-btn" onclick="hnCloseVoiceCallScreen()" title="Return to text chat"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    <div class="hn-call-panel">
+        <div class="hn-call-wave-hero">
+            <div class="hn-call-wave-field"></div>
+            <div class="hn-call-wave-core is-ready" id="hn-call-wave-core" onclick="hnCallWaveClicked()">
+                <svg class="hn-call-wave-svg" viewBox="0 0 120 56" aria-hidden="true">
+                    <path class="hn-call-wave-path hn-call-wave-path--gold" d="M8 28C16 28 18 16 26 16C34 16 36 40 44 40C52 40 54 12 62 12C70 12 72 44 80 44C88 44 90 20 98 20C106 20 108 28 112 28"></path>
+                    <path class="hn-call-wave-path hn-call-wave-path--light" d="M10 30C18 30 20 20 28 20C36 20 38 36 46 36C54 36 56 18 64 18C72 18 74 38 82 38C90 38 92 24 100 24C106 24 108 28 110 28"></path>
+                </svg>
+            </div>
+        </div>
+        <div id="hn-call-status">Tap wave to start</div>
+        <div id="hn-call-transcript"></div>
+        <button id="hn-call-action-btn" onclick="hnSendVoiceNow()">Send Now</button>
+    </div>
 </div>
 
 <div id="hn-quick-replies-container"></div>
 <div id="hn-chat-input-area">
 <textarea id="hn-chat-input" placeholder="Type a message..." rows="1" onkeydown="hnHandleEnter(event)" oninput="hnHandleInput(this)"></textarea>
-<button class="hn-icon-btn-mic" id="hn-mic-btn" style="display: none;" onclick="hnOpenVoiceScreen()" title="Talk to AI" aria-hidden="true" tabindex="-1"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg></button>
+<button class="hn-icon-btn-mic" id="hn-mic-btn" style="display: flex;" onclick="hnOpenVoiceScreen()" title="Call AI Agent"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg></button>
 <button class="hn-icon-btn-send" id="hn-send-btn" style="display: none;" onclick="hnSendMessage()"><svg viewBox="0 0 24 24" width="18" height="18" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
 </div>
 <div id="hn-powered-by"><a href="https://heynajflow.com" target="_blank"><svg viewBox="0 0 24 24"><path d="M13 3L4 14h7v7l9-11h-7z"/></svg> Powered by HeyNaj</a></div>
@@ -857,6 +816,7 @@ let hnPromoTriggeredOpen = false;
 let hnPromoDismissed = false;
 let hnSettingsLoaded = false;
 let hnPromoCountdownTimer = null;
+let hnActiveVoiceSurface = null;
 
 if ("SpeechRecognition" in window || "webkitSpeechRecognition" in window) {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -869,10 +829,9 @@ if ("SpeechRecognition" in window || "webkitSpeechRecognition" in window) {
         hnFullTranscript = "";
         hnVoiceSendLocked = false;
         hnVoiceUiBusy = false;
-        document.getElementById("hn-main-orb").className = "hn-orb hn-orb-listening";
-        document.getElementById("hn-voice-status").innerText = "Listening...";
-        hnSetVoiceTranscript("");
-        document.getElementById("hn-voice-send-btn").style.display = "none";
+        hnSetActiveVoiceListeningState();
+        hnSetActiveVoiceTranscript("");
+        hnSetActiveVoiceSendButton(false);
         if (hnCurrentAudio) { hnCurrentAudio.pause(); hnCurrentAudio = null; }
     };
 
@@ -890,34 +849,37 @@ if ("SpeechRecognition" in window || "webkitSpeechRecognition" in window) {
 
         const displayText = hnFullTranscript + interimTranscript;
         const input = document.getElementById("hn-chat-input");
-        hnSetVoiceTranscript(displayText, "active");
+        hnSetActiveVoiceTranscript(displayText, "active");
         input.value = displayText;
         hnHandleInput(input);
 
         if (hnVoiceSendLocked || hnVoiceUiBusy) {
-            document.getElementById("hn-voice-send-btn").style.display = "none";
-            document.getElementById("hn-voice-status").innerText = "Thinking...";
+            hnSetActiveVoiceSendButton(false);
+            hnSetActiveVoiceStatus("Analyzing...");
             return;
         }
 
         if (displayText.trim().length > 0) {
-            document.getElementById("hn-voice-send-btn").style.display = "inline-block";
+            hnSetActiveVoiceSendButton(true);
         }
 
         if (!hnVoiceSendLocked && hnFullTranscript.trim().length > 0 && interimTranscript.trim().length === 0) {
-            document.getElementById("hn-voice-status").innerText = "Thinking...";
+            hnSetActiveVoiceStatus("Processing...");
             hnVoiceTimeout = setTimeout(() => { hnSendVoiceNow(); }, 2500);
         } else {
-            document.getElementById("hn-voice-status").innerText = "Listening...";
+            hnSetActiveVoiceStatus("Listening...");
         }
     };
 
     hnRecognition.onerror = function(event) {
         if (event.error === "not-allowed") {
-            document.getElementById("hn-voice-status").innerText = "Microphone access denied.";
-            setTimeout(() => { hnCloseVoiceScreen(); }, 2000);
+            hnSetActiveVoiceStatus("Microphone access denied.");
+            setTimeout(() => {
+                if (hnActiveVoiceSurface === "call") hnCloseVoiceCallScreen();
+                else hnCloseVoiceScreen();
+            }, 2000);
         } else {
-            hnResetOrbState();
+            hnResetActiveVoiceState();
         }
     };
 
@@ -1597,9 +1559,9 @@ function hnUpdateComposerButtons() {
     const sendBtn = document.getElementById("hn-send-btn");
     const headerVoiceBtn = document.getElementById("hn-header-voice-btn");
     const hasText = !!(input && input.value.trim().length > 0);
-    const voiceEnabled = !!(hnWidgetSettings.enableVoice && hnRecognition && hnHasStartedChat);
+    const voiceEnabled = !!(hnWidgetSettings.enableVoice && hnRecognition);
 
-    if (headerVoiceBtn) headerVoiceBtn.style.display = voiceEnabled ? "flex" : "none";
+    if (headerVoiceBtn) headerVoiceBtn.style.display = hnHasStartedChat ? "flex" : "none";
 
     if (hasText) {
         if (micBtn) micBtn.style.display = "none";
@@ -1608,12 +1570,12 @@ function hnUpdateComposerButtons() {
     }
 
     if (sendBtn) sendBtn.style.display = "none";
-    if (micBtn) micBtn.style.display = "none";
+    if (micBtn) micBtn.style.display = voiceEnabled ? "flex" : "none";
 }
 
 function hnOpenVoiceScreen() {
     if (!hnHasStartedChat) {
-        alert("Start the chat first to use Talk to AI.");
+        alert("Start the chat first to use voice messages.");
         return;
     }
     if (!hnWidgetSettings.enableVoice) {
@@ -1621,6 +1583,8 @@ function hnOpenVoiceScreen() {
         return;
     }
     if (!hnRecognition) { alert("Voice recognition is not supported in this browser. Please type your message."); return; }
+    hnCloseVoiceCallScreen();
+    hnActiveVoiceSurface = "voice";
     document.getElementById("hn-voice-overlay").style.display = "flex";
     hnOrbClicked();
 }
@@ -1629,6 +1593,7 @@ function hnCloseVoiceScreen() {
     document.getElementById("hn-voice-overlay").style.display = "none";
     if (hnIsRecording) { hnRecognition.stop(); }
     if (hnCurrentAudio) { hnCurrentAudio.pause(); hnCurrentAudio = null; }
+    if (hnActiveVoiceSurface === "voice") hnActiveVoiceSurface = null;
     hnResetOrbState();
 }
 
@@ -1649,15 +1614,15 @@ function hnSendVoiceNow() {
     clearTimeout(hnVoiceTimeout);
     if (hnVoiceSendLocked || hnVoiceUiBusy || hnIsSendingMessage) return;
     if (!document.getElementById("hn-chat-input").value.trim()) {
-        hnResetOrbState();
+        hnResetActiveVoiceState();
         return;
     }
 
     hnVoiceSendLocked = true;
     hnVoiceUiBusy = true;
-    document.getElementById("hn-main-orb").className = "hn-orb hn-orb-thinking";
-    document.getElementById("hn-voice-status").innerText = "Thinking...";
-    document.getElementById("hn-voice-send-btn").style.display = "none";
+    hnSetActiveVoiceThinkingState();
+    hnSetActiveVoiceStatus("Analyzing...");
+    hnSetActiveVoiceSendButton(false);
     if (hnIsRecording) { hnRecognition.stop(); }
     hnSendMessage();
 }
@@ -1688,11 +1653,160 @@ function hnBuildVoiceSpeakingPreview(reply) {
 
 function hnResetOrbState() {
     document.getElementById("hn-main-orb").className = "hn-orb";
-    document.getElementById("hn-voice-status").innerText = "Tap waveform to speak";
+    document.getElementById("hn-voice-status").innerText = "Tap orb to speak";
     hnSetVoiceTranscript("");
     document.getElementById("hn-voice-send-btn").style.display = "none";
     hnVoiceUiBusy = false;
     hnVoiceSendLocked = false;
+}
+
+function hnSetVoiceCallMode(mode) {
+    const waveCore = document.getElementById("hn-call-wave-core");
+    if (!waveCore) return;
+    waveCore.className = "hn-call-wave-core " + mode;
+}
+
+function hnEscapeHtml(text) {
+    return (text || "").toString()
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+function hnNormalizeVoiceCallMode(mode) {
+    if (mode === "connecting") return "is-connecting";
+    if (mode === "listening") return "is-live is-listening";
+    if (mode === "speaking") return "is-live is-speaking";
+    return "is-ready";
+}
+
+function hnSetVoiceCallTranscript(text, isActive) {
+    const transcriptEl = document.getElementById("hn-call-transcript");
+    if (!transcriptEl) return;
+
+    transcriptEl.classList.toggle("hn-call-transcript-active", !!isActive);
+    transcriptEl.innerText = text || "";
+}
+
+function hnSetActiveVoiceStatus(text) {
+    if (hnActiveVoiceSurface === "call") {
+        const status = document.getElementById("hn-call-status");
+        if (status) status.innerText = text || "";
+        return;
+    }
+    const status = document.getElementById("hn-voice-status");
+    if (status) status.innerText = text || "";
+}
+
+function hnSetActiveVoiceTranscript(text, mode) {
+    if (hnActiveVoiceSurface === "call") {
+        hnSetVoiceCallTranscript(text, mode === "active" || mode === "speaking");
+        return;
+    }
+    hnSetVoiceTranscript(text, mode);
+}
+
+function hnSetActiveVoiceSendButton(isVisible) {
+    if (hnActiveVoiceSurface === "call") {
+        const btn = document.getElementById("hn-call-action-btn");
+        if (btn) btn.style.display = isVisible ? "inline-block" : "none";
+        return;
+    }
+    const btn = document.getElementById("hn-voice-send-btn");
+    if (btn) btn.style.display = isVisible ? "inline-block" : "none";
+}
+
+function hnSetActiveVoiceListeningState() {
+    if (hnActiveVoiceSurface === "call") {
+        hnSetVoiceCallMode(hnNormalizeVoiceCallMode("listening"));
+        hnSetActiveVoiceStatus("Listening...");
+        return;
+    }
+    document.getElementById("hn-main-orb").className = "hn-orb hn-orb-listening";
+    hnSetActiveVoiceStatus("Listening...");
+}
+
+function hnSetActiveVoiceThinkingState() {
+    if (hnActiveVoiceSurface === "call") {
+        hnSetVoiceCallMode(hnNormalizeVoiceCallMode("connecting"));
+        return;
+    }
+    document.getElementById("hn-main-orb").className = "hn-orb hn-orb-thinking";
+}
+
+function hnSetActiveVoiceSpeakingState(replyPreview) {
+    if (hnActiveVoiceSurface === "call") {
+        hnSetVoiceCallMode(hnNormalizeVoiceCallMode("speaking"));
+        hnSetActiveVoiceStatus("Speaking...");
+        hnSetActiveVoiceTranscript(replyPreview, "speaking");
+        return;
+    }
+    document.getElementById("hn-main-orb").className = "hn-orb hn-orb-speaking";
+    hnSetActiveVoiceStatus("Speaking...");
+    hnSetActiveVoiceTranscript(replyPreview, "speaking");
+}
+
+function hnResetVoiceCallState() {
+    hnSetVoiceCallMode("is-ready");
+    const status = document.getElementById("hn-call-status");
+    if (status) status.innerText = "Tap wave to start";
+    hnSetVoiceCallTranscript("", false);
+    const btn = document.getElementById("hn-call-action-btn");
+    if (btn) btn.style.display = "none";
+}
+
+function hnResetActiveVoiceState() {
+    if (hnActiveVoiceSurface === "call") {
+        hnVoiceUiBusy = false;
+        hnVoiceSendLocked = false;
+        hnResetVoiceCallState();
+        return;
+    }
+    hnResetOrbState();
+}
+
+function hnCallWaveClicked() {
+    if (hnCurrentAudio && !hnCurrentAudio.paused) {
+        hnCurrentAudio.pause();
+        hnCurrentAudio = null;
+        hnResetVoiceCallState();
+        setTimeout(() => { hnRecognition.start(); }, 50);
+        return;
+    }
+
+    if (hnIsRecording) {
+        hnRecognition.stop();
+        hnResetVoiceCallState();
+    } else {
+        hnRecognition.start();
+    }
+}
+
+function hnOpenVoiceCallScreen() {
+    if (!hnHasStartedChat) {
+        alert("Start the chat first to use Talk to AI.");
+        return;
+    }
+    if (!hnWidgetSettings.enableVoice) {
+        alert("Voice replies are not enabled for this assistant.");
+        return;
+    }
+    if (!hnRecognition) { alert("Voice recognition is not supported in this browser. Please type your message."); return; }
+    hnCloseVoiceScreen();
+    hnActiveVoiceSurface = "call";
+    document.getElementById("hn-call-overlay").style.display = "flex";
+    hnResetVoiceCallState();
+}
+
+function hnCloseVoiceCallScreen() {
+    const overlay = document.getElementById("hn-call-overlay");
+    if (overlay) overlay.style.display = "none";
+    if (hnIsRecording) { hnRecognition.stop(); }
+    if (hnCurrentAudio) { hnCurrentAudio.pause(); hnCurrentAudio = null; }
+    if (hnActiveVoiceSurface === "call") hnActiveVoiceSurface = null;
+    hnResetVoiceCallState();
 }
 
 function hnScrollToBottom() {
@@ -1834,6 +1948,7 @@ function hnToggleChat() {
     if (win.style.display === "flex") {
         win.style.display = "none";
         hnCloseVoiceScreen();
+        hnCloseVoiceCallScreen();
         hnPromoTriggeredOpen = false;
         return;
     }
@@ -1969,24 +2084,22 @@ async function hnSendMessage() {
         if (indicator) indicator.remove();
         hnAppendMessage(data.reply, "ai");
 
-        if (data.audioBase64 && document.getElementById("hn-voice-overlay").style.display === "flex") {
-            document.getElementById("hn-main-orb").className = "hn-orb hn-orb-speaking";
-            document.getElementById("hn-voice-status").innerText = "Speaking...";
-            hnSetVoiceTranscript(hnBuildVoiceSpeakingPreview(data.reply), "speaking");
-            document.getElementById("hn-voice-send-btn").style.display = "none";
+        if (data.audioBase64 && (document.getElementById("hn-voice-overlay").style.display === "flex" || document.getElementById("hn-call-overlay").style.display === "flex")) {
+            hnSetActiveVoiceSpeakingState(hnBuildVoiceSpeakingPreview(data.reply));
+            hnSetActiveVoiceSendButton(false);
             hnVoiceUiBusy = true;
 
             hnCurrentAudio = new Audio("data:audio/mp3;base64," + data.audioBase64);
             hnCurrentAudio.onended = function() {
                 hnVoiceUiBusy = false;
                 hnVoiceSendLocked = false;
-                if (document.getElementById("hn-voice-overlay").style.display === "flex") hnResetOrbState();
+                if (document.getElementById("hn-voice-overlay").style.display === "flex" || document.getElementById("hn-call-overlay").style.display === "flex") hnResetActiveVoiceState();
             };
             hnCurrentAudio.play().catch(e => console.log(e));
         } else {
             hnVoiceUiBusy = false;
             hnVoiceSendLocked = false;
-            if (document.getElementById("hn-voice-overlay").style.display === "flex") hnResetOrbState();
+            if (document.getElementById("hn-voice-overlay").style.display === "flex" || document.getElementById("hn-call-overlay").style.display === "flex") hnResetActiveVoiceState();
         }
 
         hnChatHistory.push({ role: "user", parts: [{ text: text }] }, { role: "model", parts: [{ text: data.reply }] });
@@ -1995,7 +2108,7 @@ async function hnSendMessage() {
         if (document.getElementById("hn-typing-indicator")) document.getElementById("hn-typing-indicator").remove();
         hnVoiceUiBusy = false;
         hnVoiceSendLocked = false;
-        hnResetOrbState();
+        hnResetActiveVoiceState();
     } finally {
         hnIsSendingMessage = false;
     }
@@ -2037,6 +2150,7 @@ function hnRestartChat() {
     }
 
     hnCloseVoiceScreen();
+    hnCloseVoiceCallScreen();
     hnConfigureAttentionFeature(hnWidgetSettings);
     if (document.getElementById("hn-chat-window").style.display === "flex") hnOpenChatExperience();
 }

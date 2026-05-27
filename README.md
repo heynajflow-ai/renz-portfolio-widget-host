@@ -35,7 +35,14 @@ This version keeps the original chat UI and adds:
 
 - a top-right phone action with hover text `Talk to AI`
 - a dedicated voice screen with animated waveform visuals
-- the existing speech-to-text plus TTS flow behind the new voice UI
+- the original in-chat speech-to-text plus TTS flow
+- a separate custom phone-panel voice flow that uses the same Apps Script brain as chat
+
+Important:
+
+- the top-right phone button no longer depends on a separate ElevenLabs agent setup
+- both the main chat flow and the phone-panel flow use the same Apps Script brain and knowledge source
+- voice transcripts from the phone-panel flow now follow the same webhook path as chat, so lead summaries stay unified
 
 ## Deploy to Cloudflare Pages
 

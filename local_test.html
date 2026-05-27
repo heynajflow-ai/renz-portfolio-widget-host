@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HeyNaj Portfolio Widget Local Test</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Arial, sans-serif;
+        background:
+          radial-gradient(circle at top, rgba(255, 220, 50, 0.16), transparent 24%),
+          linear-gradient(180deg, #f8fafc, #eef2f7);
+      }
+      .test-shell {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 48px 24px 96px;
+      }
+      h1 {
+        margin: 0 0 12px;
+        font-size: 32px;
+        color: #111827;
+      }
+      p {
+        margin: 0;
+        max-width: 640px;
+        color: #4b5563;
+        line-height: 1.6;
+      }
+      #real-widget-container {
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+        width: 420px;
+        height: 700px;
+        pointer-events: none;
+      }
+      #real-widget-container > * {
+        pointer-events: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="test-shell">
+      <h1>Portfolio Widget Local Test</h1>
+      <p>
+        Use this page to verify the split voice behavior before publishing.
+        The message-bar mic should stay on the original TTS voice flow, and
+        the top-right phone button should open the separate phone-panel voice flow.
+      </p>
+    </main>
+
+    <div id="real-widget-container"></div>
+    <script
+      async
+      src="./loader.js"
+      data-heynaj-container="real-widget-container"
+      data-heynaj-webhook="https://script.google.com/macros/s/AKfycbwK3cXdGbUNdXOMaTjXUqi1cPyOVHeCi6h-EaZAEvEck5EXjOQLeNMint5lx7SD8anbSw/exec"
+    ></script>
+  </body>
+</html>

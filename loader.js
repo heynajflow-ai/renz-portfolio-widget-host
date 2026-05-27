@@ -30,14 +30,14 @@
   }
 
   function prepareWidgetHtml(html) {
-    if (!webhookUrl) return html;
-    if (originalWebhookPattern.test(html)) {
-      return html.replace(
+    var updatedHtml = html;
+    if (webhookUrl && originalWebhookPattern.test(updatedHtml)) {
+      updatedHtml = updatedHtml.replace(
         originalWebhookPattern,
         'const WEBHOOK_URL = "' + escapeForJsDoubleQuote(webhookUrl) + '";'
       );
     }
-    return html;
+    return updatedHtml;
   }
 
   function executeInjectedScripts(container) {
