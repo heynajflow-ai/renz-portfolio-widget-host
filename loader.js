@@ -17,6 +17,10 @@
     currentScript.getAttribute("data-heynaj-webhook") ||
     currentScript.getAttribute("data-webhook-url") ||
     "";
+  var elevenLabsAgentId =
+    currentScript.getAttribute("data-heynaj-elevenlabs-agent") ||
+    currentScript.getAttribute("data-elevenlabs-agent-id") ||
+    "";
 
   var containerId = "heynaj-widget-loader-root";
   var mountTargetId =
@@ -24,6 +28,7 @@
     currentScript.getAttribute("data-widget-container") ||
     containerId;
   var originalWebhookPattern = /const WEBHOOK_URL = "([^"]+)";/;
+  var originalElevenLabsAgentPattern = /const ELEVENLABS_AGENT_ID = "([^"]*)";/;
 
   function escapeForJsDoubleQuote(value) {
     return String(value).replace(/\\/g, "\\\\").replace(/"/g, '\\"');
@@ -35,6 +40,12 @@
       updatedHtml = updatedHtml.replace(
         originalWebhookPattern,
         'const WEBHOOK_URL = "' + escapeForJsDoubleQuote(webhookUrl) + '";'
+      );
+    }
+    if (elevenLabsAgentId && originalElevenLabsAgentPattern.test(updatedHtml)) {
+      updatedHtml = updatedHtml.replace(
+        originalElevenLabsAgentPattern,
+        'const ELEVENLABS_AGENT_ID = "' + escapeForJsDoubleQuote(elevenLabsAgentId) + '";'
       );
     }
     return updatedHtml;

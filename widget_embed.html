@@ -737,7 +737,7 @@ font-weight: 600 !important; font-size: 16px !important; display: flex; justify-
         </div>
         <div id="hn-call-status">Tap wave to start</div>
         <div id="hn-call-transcript"></div>
-        <button id="hn-call-action-btn" onclick="hnSendVoiceNow()">Send Now</button>
+        <button id="hn-call-action-btn" onclick="hnStartVoiceCallSession()">Start voice call</button>
     </div>
 </div>
 
@@ -754,6 +754,8 @@ font-weight: 600 !important; font-size: 16px !important; display: flex; justify-
 
 <script>
 const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbybNgIc64SnrZQTv4a-c5rTplxrqRPrbxg5oKNLgExdpdt0kr0a2OXco9-inYkdZUg6yg/exec";
+const ELEVENLABS_AGENT_ID = "agent_8901kskt1hfjfnw9dv2mbh2gsx7m";
+const ELEVENLABS_CLIENT_MODULE_URL = "https://esm.sh/@elevenlabs/client";
 
 const HN_WIDGET_DEFAULTS = {
     widgetLogoUrl: "https://res.cloudinary.com/dt5j91krt/image/upload/v1775798166/HeyNaj_Logo_Widget_sfb5pe.png",
@@ -816,7 +818,14 @@ let hnPromoTriggeredOpen = false;
 let hnPromoDismissed = false;
 let hnSettingsLoaded = false;
 let hnPromoCountdownTimer = null;
-let hnActiveVoiceSurface = null;
+let hnElevenLabsClientModulePromise = null;
+let hnVoiceCallConversation = null;
+let hnVoiceCallState = "idle";
+let hnVoiceCallStarting = false;
+let hnVoiceCallMicMuted = false;
+let hnVoiceCallTranscriptLog = [];
+let hnVoiceCallFullTranscriptLog = [];
+let hnVoiceCallPersistPending = false;
 
 if ("SpeechRecognition" in window || "webkitSpeechRecognition" in window) {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -829,9 +838,10 @@ if ("SpeechRecognition" in window || "webkitSpeechRecognition" in window) {
         hnFullTranscript = "";
         hnVoiceSendLocked = false;
         hnVoiceUiBusy = false;
-        hnSetActiveVoiceListeningState();
-        hnSetActiveVoiceTranscript("");
-        hnSetActiveVoiceSendButton(false);
+        document.getElementById("hn-main-orb").className = "hn-orb hn-orb-listening";
+        document.getElementById("hn-voice-status").innerText = "Listening...";
+        hnSetVoiceTranscript("");
+        document.getElementById("hn-voice-send-btn").style.display = "none";
         if (hnCurrentAudio) { hnCurrentAudio.pause(); hnCurrentAudio = null; }
     };
 
@@ -849,37 +859,34 @@ if ("SpeechRecognition" in window || "webkitSpeechRecognition" in window) {
 
         const displayText = hnFullTranscript + interimTranscript;
         const input = document.getElementById("hn-chat-input");
-        hnSetActiveVoiceTranscript(displayText, "active");
+        hnSetVoiceTranscript(displayText, "active");
         input.value = displayText;
         hnHandleInput(input);
 
         if (hnVoiceSendLocked || hnVoiceUiBusy) {
-            hnSetActiveVoiceSendButton(false);
-            hnSetActiveVoiceStatus("Analyzing...");
+            document.getElementById("hn-voice-send-btn").style.display = "none";
+            document.getElementById("hn-voice-status").innerText = "Analyzing...";
             return;
         }
 
         if (displayText.trim().length > 0) {
-            hnSetActiveVoiceSendButton(true);
+            document.getElementById("hn-voice-send-btn").style.display = "inline-block";
         }
 
         if (!hnVoiceSendLocked && hnFullTranscript.trim().length > 0 && interimTranscript.trim().length === 0) {
-            hnSetActiveVoiceStatus("Processing...");
+            document.getElementById("hn-voice-status").innerText = "Processing...";
             hnVoiceTimeout = setTimeout(() => { hnSendVoiceNow(); }, 2500);
         } else {
-            hnSetActiveVoiceStatus("Listening...");
+            document.getElementById("hn-voice-status").innerText = "Listening...";
         }
     };
 
     hnRecognition.onerror = function(event) {
         if (event.error === "not-allowed") {
-            hnSetActiveVoiceStatus("Microphone access denied.");
-            setTimeout(() => {
-                if (hnActiveVoiceSurface === "call") hnCloseVoiceCallScreen();
-                else hnCloseVoiceScreen();
-            }, 2000);
+            document.getElementById("hn-voice-status").innerText = "Microphone access denied.";
+            setTimeout(() => { hnCloseVoiceScreen(); }, 2000);
         } else {
-            hnResetActiveVoiceState();
+            hnResetOrbState();
         }
     };
 
@@ -1584,7 +1591,6 @@ function hnOpenVoiceScreen() {
     }
     if (!hnRecognition) { alert("Voice recognition is not supported in this browser. Please type your message."); return; }
     hnCloseVoiceCallScreen();
-    hnActiveVoiceSurface = "voice";
     document.getElementById("hn-voice-overlay").style.display = "flex";
     hnOrbClicked();
 }
@@ -1593,7 +1599,6 @@ function hnCloseVoiceScreen() {
     document.getElementById("hn-voice-overlay").style.display = "none";
     if (hnIsRecording) { hnRecognition.stop(); }
     if (hnCurrentAudio) { hnCurrentAudio.pause(); hnCurrentAudio = null; }
-    if (hnActiveVoiceSurface === "voice") hnActiveVoiceSurface = null;
     hnResetOrbState();
 }
 
@@ -1614,15 +1619,15 @@ function hnSendVoiceNow() {
     clearTimeout(hnVoiceTimeout);
     if (hnVoiceSendLocked || hnVoiceUiBusy || hnIsSendingMessage) return;
     if (!document.getElementById("hn-chat-input").value.trim()) {
-        hnResetActiveVoiceState();
+        hnResetOrbState();
         return;
     }
 
     hnVoiceSendLocked = true;
     hnVoiceUiBusy = true;
-    hnSetActiveVoiceThinkingState();
-    hnSetActiveVoiceStatus("Analyzing...");
-    hnSetActiveVoiceSendButton(false);
+    document.getElementById("hn-main-orb").className = "hn-orb hn-orb-thinking";
+    document.getElementById("hn-voice-status").innerText = "Analyzing...";
+    document.getElementById("hn-voice-send-btn").style.display = "none";
     if (hnIsRecording) { hnRecognition.stop(); }
     hnSendMessage();
 }
@@ -1660,6 +1665,24 @@ function hnResetOrbState() {
     hnVoiceSendLocked = false;
 }
 
+function hnGetElevenLabsAgentId() {
+    return (ELEVENLABS_AGENT_ID || "").toString().trim();
+}
+
+function hnLoadElevenLabsClientModule() {
+    if (hnElevenLabsClientModulePromise) return hnElevenLabsClientModulePromise;
+
+    hnElevenLabsClientModulePromise = import(ELEVENLABS_CLIENT_MODULE_URL)
+        .then(function(module) {
+            if (!module || typeof module.Conversation !== "function") {
+                throw new Error("ElevenLabs Conversation SDK did not load correctly.");
+            }
+            return module;
+        });
+
+    return hnElevenLabsClientModulePromise;
+}
+
 function hnSetVoiceCallMode(mode) {
     const waveCore = document.getElementById("hn-call-wave-core");
     if (!waveCore) return;
@@ -1690,97 +1713,250 @@ function hnSetVoiceCallTranscript(text, isActive) {
     transcriptEl.innerText = text || "";
 }
 
-function hnSetActiveVoiceStatus(text) {
-    if (hnActiveVoiceSurface === "call") {
-        const status = document.getElementById("hn-call-status");
-        if (status) status.innerText = text || "";
-        return;
-    }
-    const status = document.getElementById("hn-voice-status");
-    if (status) status.innerText = text || "";
+function hnGetLatestVoiceCallTranscript() {
+    if (!hnVoiceCallTranscriptLog.length) return "";
+    const latest = hnVoiceCallTranscriptLog[hnVoiceCallTranscriptLog.length - 1];
+    return latest && latest.text ? latest.text : "";
 }
 
-function hnSetActiveVoiceTranscript(text, mode) {
-    if (hnActiveVoiceSurface === "call") {
-        hnSetVoiceCallTranscript(text, mode === "active" || mode === "speaking");
-        return;
-    }
-    hnSetVoiceTranscript(text, mode);
-}
-
-function hnSetActiveVoiceSendButton(isVisible) {
-    if (hnActiveVoiceSurface === "call") {
-        const btn = document.getElementById("hn-call-action-btn");
-        if (btn) btn.style.display = isVisible ? "inline-block" : "none";
-        return;
-    }
-    const btn = document.getElementById("hn-voice-send-btn");
-    if (btn) btn.style.display = isVisible ? "inline-block" : "none";
-}
-
-function hnSetActiveVoiceListeningState() {
-    if (hnActiveVoiceSurface === "call") {
-        hnSetVoiceCallMode(hnNormalizeVoiceCallMode("listening"));
-        hnSetActiveVoiceStatus("Listening...");
-        return;
-    }
-    document.getElementById("hn-main-orb").className = "hn-orb hn-orb-listening";
-    hnSetActiveVoiceStatus("Listening...");
-}
-
-function hnSetActiveVoiceThinkingState() {
-    if (hnActiveVoiceSurface === "call") {
-        hnSetVoiceCallMode(hnNormalizeVoiceCallMode("connecting"));
-        return;
-    }
-    document.getElementById("hn-main-orb").className = "hn-orb hn-orb-thinking";
-}
-
-function hnSetActiveVoiceSpeakingState(replyPreview) {
-    if (hnActiveVoiceSurface === "call") {
-        hnSetVoiceCallMode(hnNormalizeVoiceCallMode("speaking"));
-        hnSetActiveVoiceStatus("Speaking...");
-        hnSetActiveVoiceTranscript(replyPreview, "speaking");
-        return;
-    }
-    document.getElementById("hn-main-orb").className = "hn-orb hn-orb-speaking";
-    hnSetActiveVoiceStatus("Speaking...");
-    hnSetActiveVoiceTranscript(replyPreview, "speaking");
-}
-
-function hnResetVoiceCallState() {
-    hnSetVoiceCallMode("is-ready");
+function hnRenderVoiceCallPlaceholder(message, note, title) {
     const status = document.getElementById("hn-call-status");
-    if (status) status.innerText = "Tap wave to start";
-    hnSetVoiceCallTranscript("", false);
-    const btn = document.getElementById("hn-call-action-btn");
-    if (btn) btn.style.display = "none";
+    const actionBtn = document.getElementById("hn-call-action-btn");
+    if (!status || !actionBtn) return;
+
+    status.innerText = title || "Voice Call AI";
+    hnSetVoiceCallTranscript(message || note || "", false);
+    actionBtn.style.display = "none";
+    hnSetVoiceCallMode("is-ready");
 }
 
-function hnResetActiveVoiceState() {
-    if (hnActiveVoiceSurface === "call") {
-        hnVoiceUiBusy = false;
-        hnVoiceSendLocked = false;
-        hnResetVoiceCallState();
+function hnSummarizeVoiceCallMessage(rawMessage) {
+    if (!rawMessage) return null;
+    const text = [
+        rawMessage.message,
+        rawMessage.text,
+        rawMessage.content,
+        rawMessage.transcript
+    ].find(function(item) { return typeof item === "string" && item.trim(); });
+    if (!text) return null;
+
+    const source = (rawMessage.source || rawMessage.role || rawMessage.type || "").toString().toLowerCase();
+    return {
+        speaker: /user|human|client/.test(source) ? "user" : "agent",
+        text: text.toString().trim()
+    };
+}
+
+function hnPushVoiceCallTranscript(entry) {
+    if (!entry || !entry.text) return;
+    const lastFullEntry = hnVoiceCallFullTranscriptLog.length ? hnVoiceCallFullTranscriptLog[hnVoiceCallFullTranscriptLog.length - 1] : null;
+    if (lastFullEntry && lastFullEntry.speaker === entry.speaker && lastFullEntry.text === entry.text) return;
+
+    hnVoiceCallFullTranscriptLog.push(entry);
+    hnVoiceCallTranscriptLog.push(entry);
+    if (hnVoiceCallTranscriptLog.length > 6) {
+        hnVoiceCallTranscriptLog = hnVoiceCallTranscriptLog.slice(-6);
+    }
+}
+
+function hnMirrorVoiceCallEntryToChat(entry) {
+    if (!entry || !entry.text) return;
+    const container = document.getElementById("hn-chat-messages");
+    if (!container) return;
+
+    const speakerClass = entry.speaker === "user" ? "user" : "ai";
+    const msgDiv = document.createElement("div");
+    msgDiv.className = "hn-message hn-" + speakerClass + "-message";
+    msgDiv.setAttribute("data-hn-voice-call-entry", "true");
+    msgDiv.innerHTML = hnLinkify(entry.text).replace(/\n/g, "<br>");
+    container.appendChild(msgDiv);
+    hnScrollToBottom();
+}
+
+function hnBuildVoiceCallTranscriptPayload() {
+    return hnVoiceCallFullTranscriptLog.map(function(entry) {
+        return {
+            speaker: entry.speaker,
+            text: entry.text
+        };
+    });
+}
+
+async function hnPersistVoiceCallTranscript() {
+    if (!hnVoiceCallPersistPending || !hnVoiceCallFullTranscriptLog.length) return;
+    hnVoiceCallPersistPending = false;
+
+    try {
+        await fetch(WEBHOOK_URL, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({
+                type: "voice_call_transcript",
+                sessionId: hnSessionId,
+                userName: hnUserName,
+                userEmail: hnUserEmail,
+                userPhone: hnUserPhone,
+                pageUrl: window.location.href,
+                pageTitle: document.title,
+                transcriptEntries: hnBuildVoiceCallTranscriptPayload()
+            })
+        });
+    } catch (error) {}
+}
+
+function hnRenderVoiceCallPanel() {
+    const status = document.getElementById("hn-call-status");
+    const actionBtn = document.getElementById("hn-call-action-btn");
+    const agentId = hnGetElevenLabsAgentId();
+
+    if (!status || !actionBtn) return;
+    if (!agentId) {
+        hnRenderVoiceCallPlaceholder(
+            "Voice call setup is not ready yet.",
+            "Add a live voice agent ID to activate the top-right phone experience."
+        );
         return;
     }
-    hnResetOrbState();
+
+    let transcriptText = "";
+    let transcriptActive = false;
+
+    if (hnVoiceCallStarting) {
+        status.innerText = "Connecting...";
+        transcriptText = "Requesting microphone access...";
+    } else if (hnVoiceCallState === "speaking") {
+        status.innerText = "Speaking...";
+        transcriptText = hnGetLatestVoiceCallTranscript() || "AI is replying...";
+        transcriptActive = !!hnGetLatestVoiceCallTranscript();
+    } else if (hnVoiceCallState === "listening") {
+        status.innerText = "Listening...";
+        transcriptText = hnGetLatestVoiceCallTranscript() || "Speak now...";
+        transcriptActive = !!hnGetLatestVoiceCallTranscript();
+    } else if (hnVoiceCallState === "error") {
+        status.innerText = "Voice call unavailable";
+        transcriptText = hnGetLatestVoiceCallTranscript() || "Check microphone access and try again.";
+    } else {
+        status.innerText = "Tap wave to start";
+        transcriptText = hnGetLatestVoiceCallTranscript() || "Start a voice call.";
+        transcriptActive = !!hnGetLatestVoiceCallTranscript();
+    }
+
+    hnSetVoiceCallMode(hnNormalizeVoiceCallMode(hnVoiceCallStarting ? "connecting" : hnVoiceCallState));
+    hnSetVoiceCallTranscript(transcriptText, transcriptActive);
+
+    const canStart = !hnVoiceCallConversation && !hnVoiceCallStarting;
+    const isLive = !!hnVoiceCallConversation;
+    actionBtn.style.display = "inline-block";
+    actionBtn.disabled = !(canStart || isLive);
+    actionBtn.className = isLive ? "hn-call-action-btn--danger" : "";
+    actionBtn.innerText = isLive ? "End Call" : (hnVoiceCallStarting ? "Starting..." : "Start Call");
+    actionBtn.onclick = isLive ? hnEndVoiceCallSession : hnStartVoiceCallSession;
+}
+
+async function hnStartVoiceCallSession() {
+    const agentId = hnGetElevenLabsAgentId();
+    if (!agentId || hnVoiceCallConversation || hnVoiceCallStarting) return;
+
+    hnVoiceCallStarting = true;
+    hnVoiceCallState = "connecting";
+    hnVoiceCallMicMuted = false;
+    hnVoiceCallTranscriptLog = [];
+    hnVoiceCallFullTranscriptLog = [];
+    hnVoiceCallPersistPending = true;
+    hnRenderVoiceCallPanel();
+
+    try {
+        await navigator.mediaDevices.getUserMedia({ audio: true });
+        const sdk = await hnLoadElevenLabsClientModule();
+
+        hnVoiceCallConversation = await sdk.Conversation.startSession({
+            agentId: agentId,
+            onConnect: function() {
+                hnVoiceCallStarting = false;
+                hnVoiceCallState = "listening";
+                hnRenderVoiceCallPanel();
+            },
+            onDisconnect: function() {
+                hnVoiceCallConversation = null;
+                hnVoiceCallStarting = false;
+                hnVoiceCallMicMuted = false;
+                hnVoiceCallState = "idle";
+                hnRenderVoiceCallPanel();
+                hnPersistVoiceCallTranscript();
+            },
+            onError: function(error) {
+                hnVoiceCallConversation = null;
+                hnVoiceCallStarting = false;
+                hnVoiceCallMicMuted = false;
+                hnVoiceCallState = "error";
+                hnPersistVoiceCallTranscript();
+                hnRenderVoiceCallPlaceholder(
+                    "The voice call could not start right now.",
+                    (error && error.message ? error.message : String(error || "Unknown voice error")) + " If this voice agent is private, you may need a signed session URL later.",
+                    "Voice call unavailable"
+                );
+            },
+            onModeChange: function(mode) {
+                const nextMode = typeof mode === "string" ? mode : ((mode && mode.mode) || "");
+                if (nextMode === "speaking") {
+                    hnVoiceCallState = "speaking";
+                } else if (nextMode === "listening" || nextMode === "connected") {
+                    hnVoiceCallState = "listening";
+                }
+                hnRenderVoiceCallPanel();
+            },
+            onMessage: function(message) {
+                const summary = hnSummarizeVoiceCallMessage(message || {});
+                if (!summary) return;
+                const previousCount = hnVoiceCallFullTranscriptLog.length;
+                hnPushVoiceCallTranscript(summary);
+                if (hnVoiceCallFullTranscriptLog.length > previousCount) {
+                    hnMirrorVoiceCallEntryToChat(summary);
+                }
+                hnRenderVoiceCallPanel();
+            }
+        });
+    } catch (error) {
+        hnVoiceCallConversation = null;
+        hnVoiceCallStarting = false;
+        hnVoiceCallMicMuted = false;
+        hnVoiceCallState = "error";
+        hnVoiceCallPersistPending = false;
+        hnRenderVoiceCallPlaceholder(
+            "The voice call could not start right now.",
+            (error && error.message ? error.message : String(error || "Unknown voice error")) + " Check microphone permission first, then verify whether the voice agent can be started directly from the browser.",
+            "Voice call unavailable"
+        );
+    }
+}
+
+async function hnEndVoiceCallSession() {
+    if (!hnVoiceCallConversation) {
+        hnVoiceCallStarting = false;
+        hnVoiceCallState = "idle";
+        hnRenderVoiceCallPanel();
+        return;
+    }
+
+    const activeConversation = hnVoiceCallConversation;
+    hnVoiceCallConversation = null;
+    hnVoiceCallStarting = false;
+    hnVoiceCallMicMuted = false;
+    hnVoiceCallState = "idle";
+
+    try {
+        await activeConversation.endSession();
+    } catch (error) {}
+
+    hnPersistVoiceCallTranscript();
+    hnRenderVoiceCallPanel();
 }
 
 function hnCallWaveClicked() {
-    if (hnCurrentAudio && !hnCurrentAudio.paused) {
-        hnCurrentAudio.pause();
-        hnCurrentAudio = null;
-        hnResetVoiceCallState();
-        setTimeout(() => { hnRecognition.start(); }, 50);
-        return;
-    }
-
-    if (hnIsRecording) {
-        hnRecognition.stop();
-        hnResetVoiceCallState();
+    if (hnVoiceCallConversation) {
+        hnEndVoiceCallSession();
     } else {
-        hnRecognition.start();
+        hnStartVoiceCallSession();
     }
 }
 
@@ -1789,24 +1965,15 @@ function hnOpenVoiceCallScreen() {
         alert("Start the chat first to use Talk to AI.");
         return;
     }
-    if (!hnWidgetSettings.enableVoice) {
-        alert("Voice replies are not enabled for this assistant.");
-        return;
-    }
-    if (!hnRecognition) { alert("Voice recognition is not supported in this browser. Please type your message."); return; }
     hnCloseVoiceScreen();
-    hnActiveVoiceSurface = "call";
     document.getElementById("hn-call-overlay").style.display = "flex";
-    hnResetVoiceCallState();
+    hnRenderVoiceCallPanel();
 }
 
 function hnCloseVoiceCallScreen() {
     const overlay = document.getElementById("hn-call-overlay");
     if (overlay) overlay.style.display = "none";
-    if (hnIsRecording) { hnRecognition.stop(); }
-    if (hnCurrentAudio) { hnCurrentAudio.pause(); hnCurrentAudio = null; }
-    if (hnActiveVoiceSurface === "call") hnActiveVoiceSurface = null;
-    hnResetVoiceCallState();
+    hnEndVoiceCallSession();
 }
 
 function hnScrollToBottom() {
@@ -2084,22 +2251,24 @@ async function hnSendMessage() {
         if (indicator) indicator.remove();
         hnAppendMessage(data.reply, "ai");
 
-        if (data.audioBase64 && (document.getElementById("hn-voice-overlay").style.display === "flex" || document.getElementById("hn-call-overlay").style.display === "flex")) {
-            hnSetActiveVoiceSpeakingState(hnBuildVoiceSpeakingPreview(data.reply));
-            hnSetActiveVoiceSendButton(false);
+        if (data.audioBase64 && document.getElementById("hn-voice-overlay").style.display === "flex") {
+            document.getElementById("hn-main-orb").className = "hn-orb hn-orb-speaking";
+            document.getElementById("hn-voice-status").innerText = "Speaking...";
+            hnSetVoiceTranscript(hnBuildVoiceSpeakingPreview(data.reply), "speaking");
+            document.getElementById("hn-voice-send-btn").style.display = "none";
             hnVoiceUiBusy = true;
 
             hnCurrentAudio = new Audio("data:audio/mp3;base64," + data.audioBase64);
             hnCurrentAudio.onended = function() {
                 hnVoiceUiBusy = false;
                 hnVoiceSendLocked = false;
-                if (document.getElementById("hn-voice-overlay").style.display === "flex" || document.getElementById("hn-call-overlay").style.display === "flex") hnResetActiveVoiceState();
+                if (document.getElementById("hn-voice-overlay").style.display === "flex") hnResetOrbState();
             };
             hnCurrentAudio.play().catch(e => console.log(e));
         } else {
             hnVoiceUiBusy = false;
             hnVoiceSendLocked = false;
-            if (document.getElementById("hn-voice-overlay").style.display === "flex" || document.getElementById("hn-call-overlay").style.display === "flex") hnResetActiveVoiceState();
+            if (document.getElementById("hn-voice-overlay").style.display === "flex") hnResetOrbState();
         }
 
         hnChatHistory.push({ role: "user", parts: [{ text: text }] }, { role: "model", parts: [{ text: data.reply }] });
@@ -2108,7 +2277,7 @@ async function hnSendMessage() {
         if (document.getElementById("hn-typing-indicator")) document.getElementById("hn-typing-indicator").remove();
         hnVoiceUiBusy = false;
         hnVoiceSendLocked = false;
-        hnResetActiveVoiceState();
+        hnResetOrbState();
     } finally {
         hnIsSendingMessage = false;
     }

@@ -17,10 +17,16 @@ Paste this snippet on the portfolio site:
 <script async src="https://YOUR-PAGES-DOMAIN/loader.js" data-heynaj-webhook="YOUR-PORTFOLIO-APPS-SCRIPT-EXEC"></script>
 ```
 
+To activate the separate ElevenLabs call mode from the top-right phone icon, also pass your conversational agent id:
+
+```html
+<script async src="https://YOUR-PAGES-DOMAIN/loader.js" data-heynaj-webhook="YOUR-PORTFOLIO-APPS-SCRIPT-EXEC" data-heynaj-elevenlabs-agent="agent_xxxxxxxxxxxxxxxxx"></script>
+```
+
 If the page already has a dedicated mount node, use:
 
 ```html
-<script async src="https://YOUR-PAGES-DOMAIN/loader.js" data-heynaj-container="real-widget-container" data-heynaj-webhook="YOUR-PORTFOLIO-APPS-SCRIPT-EXEC"></script>
+<script async src="https://YOUR-PAGES-DOMAIN/loader.js" data-heynaj-container="real-widget-container" data-heynaj-webhook="YOUR-PORTFOLIO-APPS-SCRIPT-EXEC" data-heynaj-elevenlabs-agent="agent_xxxxxxxxxxxxxxxxx"></script>
 ```
 
 The loader:
@@ -36,13 +42,13 @@ This version keeps the original chat UI and adds:
 - a top-right phone action with hover text `Talk to AI`
 - a dedicated voice screen with animated waveform visuals
 - the original in-chat speech-to-text plus TTS flow
-- a separate custom phone-panel voice flow that uses the same Apps Script brain as chat
+- a separate custom ElevenLabs-powered live voice panel once an agent id is supplied
 
 Important:
 
-- the top-right phone button no longer depends on a separate ElevenLabs agent setup
-- both the main chat flow and the phone-panel flow use the same Apps Script brain and knowledge source
-- voice transcripts from the phone-panel flow now follow the same webhook path as chat, so lead summaries stay unified
+- this host does **not** mount the default ElevenLabs widget UI
+- the top-right call keeps the HeyNaj interface and uses ElevenLabs only as the live voice engine underneath
+- if your agent is private, you will need a signed URL endpoint later instead of only an `agent_id`
 
 ## Deploy to Cloudflare Pages
 
