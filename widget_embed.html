@@ -272,27 +272,20 @@ background: var(--hn-header-color) !important; color: #ffffff !important; paddin
 font-weight: 600 !important; font-size: 16px !important; display: flex; justify-content: space-between; align-items: center; z-index: 10;
 }
 
-.hn-header-actions { display: flex; align-items: center; gap: 12px; }
+.hn-header-actions { display: flex; align-items: center; gap: 14px; }
 .hn-header-icon-btn { background: none; border: none; cursor: pointer; display: flex; padding: 0; transition: transform 0.2s ease;}
 .hn-header-icon-btn svg { width: 18px; height: 18px; fill: #ffffff !important;}
 .hn-header-icon-btn--voice {
   display: none;
-  width: 34px;
-  height: 34px;
-  border-radius: 999px;
   align-items: center;
   justify-content: center;
-  background: rgba(255,255,255,0.12);
-  border: 1px solid rgba(255,255,255,0.18);
-  box-shadow: 0 10px 24px rgba(0,0,0,0.14);
 }
 .hn-header-icon-btn--voice:hover {
-  transform: translateY(-1px) scale(1.03);
-  background: rgba(255,255,255,0.18);
+  transform: scale(1.08);
 }
 .hn-header-icon-btn--voice svg {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
 }
 
 #hn-pre-chat-form { padding: 20px 30px; display: flex; flex-direction: column; gap: 14px; flex: 1; justify-content: center; }
@@ -1674,10 +1667,11 @@ function hnLoadElevenLabsClientModule() {
 
     hnElevenLabsClientModulePromise = import(ELEVENLABS_CLIENT_MODULE_URL)
         .then(function(module) {
-            if (!module || typeof module.Conversation !== "function") {
+            const ConversationClient = (module && (module.Conversation || (module.default && module.default.Conversation))) || null;
+            if (!ConversationClient || typeof ConversationClient.startSession !== "function") {
                 throw new Error("ElevenLabs Conversation SDK did not load correctly.");
             }
-            return module;
+            return { Conversation: ConversationClient };
         });
 
     return hnElevenLabsClientModulePromise;
@@ -1725,7 +1719,7 @@ function hnRenderVoiceCallPlaceholder(message, note, title) {
     if (!status || !actionBtn) return;
 
     status.innerText = title || "Voice Call AI";
-    hnSetVoiceCallTranscript(message || note || "", false);
+    hnSetVoiceCallTranscript([message, note].filter(Boolean).join(" "), false);
     actionBtn.style.display = "none";
     hnSetVoiceCallMode("is-ready");
 }
@@ -1889,6 +1883,7 @@ async function hnStartVoiceCallSession() {
                 hnVoiceCallStarting = false;
                 hnVoiceCallMicMuted = false;
                 hnVoiceCallState = "error";
+                console.error("[HeyNaj Voice Call] ElevenLabs session error:", error);
                 hnPersistVoiceCallTranscript();
                 hnRenderVoiceCallPlaceholder(
                     "The voice call could not start right now.",
@@ -1922,6 +1917,7 @@ async function hnStartVoiceCallSession() {
         hnVoiceCallMicMuted = false;
         hnVoiceCallState = "error";
         hnVoiceCallPersistPending = false;
+        console.error("[HeyNaj Voice Call] Failed to start ElevenLabs session:", error);
         hnRenderVoiceCallPlaceholder(
             "The voice call could not start right now.",
             (error && error.message ? error.message : String(error || "Unknown voice error")) + " Check microphone permission first, then verify whether the voice agent can be started directly from the browser.",
