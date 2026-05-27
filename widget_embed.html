@@ -1,0 +1,2043 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+#heynaj-chat-widget {
+position: fixed; bottom: 24px; right: 24px;
+font-family: 'Inter', sans-serif !important;
+z-index: 999999;
+animation: hnWidgetSlideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 3.5s both;
+--hn-header-color: #1a1a1a;
+--hn-callout-border-color: #ffdc32;
+--hn-promo-teaser-border-color: #ffdc32;
+--hn-callout-glow-soft: rgba(255, 220, 50, 0.18);
+--hn-callout-glow-strong: rgba(255, 220, 50, 0.34);
+--hn-promo-teaser-glow-soft: rgba(26, 26, 26, 0.18);
+--hn-promo-teaser-glow-strong: rgba(26, 26, 26, 0.32);
+--hn-promo-teaser-radius: 22px;
+--hn-promo-teaser-media-radius: 16px;
+--hn-promo-teaser-image-radius: 12px;
+--hn-promo-card-radius: 22px;
+--hn-promo-countdown-bg: rgba(15, 23, 42, 0.06);
+--hn-promo-countdown-text: #475569;
+--hn-promo-countdown-border: rgba(15, 23, 42, 0.08);
+--hn-callout-bg: #ffffff;
+--hn-window-bg: rgba(255, 255, 255, 0.85);
+--hn-window-border: rgba(255, 255, 255, 0.5);
+--hn-window-shadow: 0 24px 60px rgba(0,0,0,0.12);
+--hn-window-backdrop: blur(25px);
+--hn-window-overlay-backdrop: blur(15px);
+--hn-window-surface-bg: #ffffff;
+--hn-window-powered-bg: #ffffff;
+--hn-window-overlay-bg: rgba(255, 255, 255, 0.95);
+--hn-form-input-bg: rgba(255,255,255,0.6);
+--hn-chat-input-bg: #ffffff;
+--hn-window-radius: 28px;
+--hn-window-border-width: 1px;
+}
+
+@keyframes hnWidgetSlideIn {
+  0% { transform: translateY(50px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+#hn-chat-callout {
+position: absolute; bottom: 85px; right: 0;
+background: var(--hn-callout-bg) !important; color: #1a1a1a !important;
+padding: 14px 24px !important; border-radius: 30px !important;
+box-shadow: 0 10px 30px rgba(0,0,0,0.08) !important;
+border: 2px solid var(--hn-callout-border-color) !important; font-size: 14px !important; font-weight: 700 !important;
+white-space: nowrap !important; cursor: pointer; transition: all 0.3s ease; opacity: 0; visibility: hidden;
+}
+
+#hn-chat-callout.hn-callout-promo {
+  width: min(316px, calc(100vw - 24px));
+  padding: 12px 8px 14px !important;
+  border-radius: var(--hn-promo-teaser-radius) !important;
+  white-space: normal !important;
+  overflow: hidden;
+  border: 1.5px solid var(--hn-promo-teaser-border-color) !important;
+  background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(248,250,252,0.98) 100%) !important;
+  box-shadow: 0 14px 34px rgba(15,23,42,0.12) !important;
+}
+.hn-callout-promo-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  padding: 0;
+  position: relative;
+}
+.hn-callout-promo-header {
+  display: block;
+  margin-top: 0;
+  padding-top: 3px;
+  padding-left: 5px;
+}
+.hn-callout-promo-content {
+  min-width: 0;
+  padding-right: 38px;
+}
+.hn-callout-promo-media {
+  width: 100%;
+  min-height: 134px;
+  aspect-ratio: 1.58 / 1;
+  border-radius: var(--hn-promo-teaser-media-radius);
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  box-sizing: border-box;
+}
+.hn-callout-promo-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  border-radius: var(--hn-promo-teaser-image-radius);
+}
+.hn-callout-promo-media-placeholder {
+  background: linear-gradient(135deg, #fff7d1 0%, #ffffff 55%, #f8fafc 100%);
+}
+.hn-callout-promo-icon {
+  font-size: 30px;
+  line-height: 1;
+}
+.hn-callout-promo-kicker {
+  font-size: 9px;
+  line-height: 1.22;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+.hn-callout-promo-title {
+  font-size: 16px;
+  line-height: 1.18;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  color: #0f172a;
+  margin-bottom: 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+.hn-callout-promo-copy {
+  font-size: 12px;
+  line-height: 1.48;
+  font-weight: 500;
+  color: #475569;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+.hn-callout-promo-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(15,23,42,0.08);
+  font-size: 18px;
+  line-height: 1;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.hn-callout-promo-close:hover {
+  background: rgba(15,23,42,0.14);
+  transform: scale(1.03);
+}
+@media (max-width: 420px) {
+  #hn-chat-callout.hn-callout-promo {
+    width: min(300px, calc(100vw - 20px));
+    padding: 11px 7px 13px !important;
+    border-radius: var(--hn-promo-teaser-radius) !important;
+  }
+  .hn-callout-promo-inner {
+    gap: 14px;
+  }
+  .hn-callout-promo-media {
+    min-height: 120px;
+    border-radius: 14px;
+  }
+  .hn-callout-promo-content {
+    padding-right: 34px;
+  }
+  .hn-callout-promo-header {
+    padding-top: 2px;
+    padding-left: 4px;
+  }
+  .hn-callout-promo-title { font-size: 15px; }
+  .hn-callout-promo-copy { font-size: 11px; line-height: 1.45; }
+}
+
+.hn-show-callout { opacity: 1 !important; visibility: visible !important; }
+.hn-callout-animate-none { animation: none !important; filter: none !important; }
+.hn-callout-animate-breathing { animation: hnCalloutPulse 2s infinite; }
+.hn-callout-animate-float { animation: hnCalloutFloat 3s ease-in-out infinite; }
+.hn-callout-animate-bounce { animation: hnCalloutBounce 1.5s infinite; }
+.hn-callout-animate-glow { animation: hnCalloutGlow 2.2s ease-in-out infinite; will-change: transform, filter; }
+#hn-chat-callout.hn-callout-promo.hn-callout-animate-glow { animation-name: hnPromoTeaserGlow; }
+
+@keyframes hnCalloutPulse {
+  0% { transform: scale(1); box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+  50% { transform: scale(1.03); box-shadow: 0 12px 35px rgba(0,0,0,0.12); }
+  100% { transform: scale(1); box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+}
+
+@keyframes hnCalloutFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes hnCalloutBounce {
+  0%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-8px); }
+  50% { transform: translateY(0); }
+  70% { transform: translateY(-4px); }
+}
+
+@keyframes hnCalloutGlow {
+  0%, 100% {
+    filter: drop-shadow(0 12px 20px var(--hn-callout-glow-soft));
+  }
+  50% {
+    filter: drop-shadow(0 16px 28px var(--hn-callout-glow-strong));
+  }
+}
+
+@keyframes hnPromoTeaserGlow {
+  0%, 100% {
+    filter: drop-shadow(0 12px 20px var(--hn-promo-teaser-glow-soft));
+  }
+  50% {
+    filter: drop-shadow(0 16px 28px var(--hn-promo-teaser-glow-strong));
+  }
+}
+
+#hn-chat-callout.hn-callout-style-pill { border-radius: 999px !important; }
+#hn-chat-callout.hn-callout-style-rounded-box { border-radius: 18px !important; padding: 16px 20px !important; }
+#hn-chat-callout.hn-callout-style-speech-bubble { border-radius: 22px 22px 10px 22px !important; padding: 14px 20px !important; }
+#hn-chat-callout.hn-callout-style-glass {
+  border-radius: 999px !important;
+  background: rgba(255,255,255,0.72) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+#hn-chat-callout.hn-callout-style-outline-tag {
+  border-radius: 12px !important;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 11px !important;
+  padding: 12px 16px !important;
+}
+
+#hn-chat-bubble {
+width: 68px; height: 68px; background-color: #ffffff !important;
+border-radius: 50% !important; cursor: pointer; box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+display: flex; align-items: center; justify-content: center;
+border: 1px solid rgba(0,0,0,0.05) !important; transition: transform 0.3s ease; overflow: hidden;
+}
+
+#hn-chat-bubble:hover { transform: scale(1.05); }
+#hn-custom-bubble-logo { width: 45px; height: 45px; object-fit: contain; }
+
+#hn-chat-window {
+display: none; width: 380px; height: 600px;
+background: var(--hn-window-bg) !important;
+border-radius: var(--hn-window-radius) !important; box-shadow: var(--hn-window-shadow) !important;
+position: absolute; bottom: 90px; right: 0;
+flex-direction: column; overflow: hidden;
+backdrop-filter: var(--hn-window-backdrop); -webkit-backdrop-filter: var(--hn-window-backdrop);
+border: var(--hn-window-border-width) solid var(--hn-window-border) !important;
+}
+
+#hn-chat-header {
+background: var(--hn-header-color) !important; color: #ffffff !important; padding: 18px 24px !important;
+font-weight: 600 !important; font-size: 16px !important; display: flex; justify-content: space-between; align-items: center; z-index: 10;
+}
+
+.hn-header-actions { display: flex; align-items: center; gap: 12px; }
+.hn-header-icon-btn { background: none; border: none; cursor: pointer; display: flex; padding: 0; transition: transform 0.2s ease;}
+.hn-header-icon-btn svg { width: 18px; height: 18px; fill: #ffffff !important;}
+.hn-header-icon-btn--voice {
+  display: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.14);
+}
+.hn-header-icon-btn--voice:hover {
+  transform: translateY(-1px) scale(1.03);
+  background: rgba(255,255,255,0.18);
+}
+.hn-header-icon-btn--voice svg {
+  width: 16px;
+  height: 16px;
+}
+
+#hn-pre-chat-form { padding: 20px 30px; display: flex; flex-direction: column; gap: 14px; flex: 1; justify-content: center; }
+#hn-pre-chat-form.hn-pre-chat-form-promo { justify-content: flex-start; overflow-y: auto; padding-top: 16px; }
+.hn-form-desc { font-size: 13px; color: #666; text-align: center; margin-bottom: 4px; line-height: 1.4; display: block !important; }
+.hn-form-error { color: #ef4444 !important; font-size: 12px !important; text-align: center; display: none; font-weight: 600 !important; }
+.hn-lead-input { padding: 14px 18px !important; border: 1px solid rgba(0,0,0,0.1) !important; border-radius: 14px !important; background: var(--hn-form-input-bg) !important; font-size: 14px !important; outline: none; transition: 0.3s; }
+#hn-start-chat-btn { background-color: var(--hn-header-color) !important; color: #ffffff !important; padding: 16px !important; border-radius: 14px !important; font-weight: 600 !important; cursor: pointer; border: none !important; transition: 0.2s; }
+#hn-logo-container { text-align: center; margin-top: 15px; display: flex; justify-content: center; width: 100%; }
+.hn-form-logo { width: 45px; height: auto; opacity: 0.9; }
+.hn-disclaimer { font-size: 11px; color: #999; text-align: center; margin-top: 10px; line-height: 1.4; display: block !important; }
+
+#hn-chat-messages { display: none; flex: 1; padding: 14px 24px 20px !important; overflow-y: auto; flex-direction: column; gap: 14px; position: relative;}
+.hn-message { max-width: 85% !important; padding: 14px 18px !important; border-radius: 18px !important; font-size: 14px !important; line-height: 1.72 !important; letter-spacing: -0.005em; word-wrap: break-word; overflow-wrap: break-word; white-space: pre-wrap; }
+.hn-message a { color: #2563eb !important; text-decoration: underline !important; font-weight: 600 !important; }
+.hn-user-message { background: var(--hn-header-color) !important; align-self: flex-end !important; color: #ffffff !important; border-bottom-right-radius: 4px !important; max-width: 84% !important; }
+.hn-ai-message { background: #ffffff !important; color: #1a1a1a !important; align-self: flex-start !important; border-bottom-left-radius: 4px !important; border: 1px solid rgba(0,0,0,0.05); max-width: 90% !important; }
+.hn-promo-message { max-width: 92% !important; padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; }
+.hn-promo-preview-slot { display: none; margin-bottom: 6px; flex: 0 0 auto; }
+.hn-promo-card {
+  position: relative;
+  background: #ffffff;
+  color: #1a1a1a;
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: var(--hn-promo-card-radius);
+  box-shadow: 0 14px 36px rgba(15,23,42,0.10);
+  padding: 16px 16px 22px;
+  overflow: hidden;
+}
+.hn-promo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #475569;
+  margin-bottom: 10px;
+}
+.hn-promo-title {
+  font-size: 18px;
+  line-height: 1.24;
+  font-weight: 700;
+  letter-spacing: -0.018em;
+  color: #0f172a;
+  margin-bottom: 6px;
+}
+.hn-promo-offer {
+  font-size: 14px;
+  line-height: 1.45;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 8px;
+}
+.hn-promo-desc {
+  font-size: 14px;
+  line-height: 1.64;
+  letter-spacing: -0.005em;
+  color: #475569;
+  white-space: pre-wrap;
+}
+.hn-promo-helper {
+  margin-top: 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #64748b;
+}
+.hn-promo-image {
+  width: 100%;
+  display: block;
+  border-radius: 16px;
+  margin: 14px 0 12px 0;
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 8px 24px rgba(15,23,42,0.08);
+}
+.hn-promo-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+.hn-promo-countdown {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--hn-promo-countdown-text);
+  background: var(--hn-promo-countdown-bg);
+  border: 1px solid var(--hn-promo-countdown-border);
+  border-radius: 999px;
+  padding: 7px 12px;
+}
+.hn-promo-cta {
+  background: var(--hn-header-color) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 999px !important;
+  padding: 11px 18px !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.hn-promo-cta:hover { transform: scale(1.02); }
+.hn-promo-dismiss {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(15,23,42,0.06);
+  color: #475569;
+  font-size: 15px;
+  cursor: pointer;
+}
+.hn-promo-dismiss:hover { background: rgba(15,23,42,0.12); }
+.hn-promo-preview-slot .hn-promo-card {
+  padding: 14px 14px 18px;
+  border-radius: var(--hn-promo-card-radius);
+}
+.hn-promo-preview-slot .hn-promo-title { font-size: 16px; line-height: 1.22; }
+.hn-promo-preview-slot .hn-promo-offer {
+  font-size: 13px;
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+.hn-promo-preview-slot .hn-promo-desc {
+  font-size: 13px;
+  line-height: 1.5;
+}
+.hn-promo-preview-slot .hn-promo-image {
+  max-height: 180px;
+  object-fit: contain;
+  background: #ffffff;
+}
+.hn-promo-preview-slot .hn-promo-footer { margin-top: 10px; }
+.hn-typing-indicator { display: flex; gap: 4px; padding: 14px 18px !important; background: #ffffff !important; border-radius: 18px !important; width: fit-content; align-self: flex-start; margin-bottom: 8px; border: 1px solid rgba(0,0,0,0.05); }
+.hn-typing-indicator span { width: 5px; height: 5px; background: #888; border-radius: 50%; animation: hn-bounce 1.4s infinite both; }
+
+@keyframes hn-bounce {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1); }
+}
+
+#hn-quick-replies-container { display: none; padding: 10px 24px 15px 24px; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.hn-qr-btn { background: #ffffff; border: 1px solid rgba(0,0,0,0.1); color: #1a1a1a; padding: 9px 14px; border-radius: 20px; font-size: 12px; line-height: 1.25; cursor: pointer; font-weight: 600; transition: 0.2s; }
+.hn-qr-btn:hover { background: var(--hn-header-color); color: #ffffff; }
+
+#hn-chat-input-area { display: none; padding: 15px 16px 10px 16px; gap: 8px; border-top: 1px solid rgba(0,0,0,0.05); align-items: flex-end; background: var(--hn-window-surface-bg);}
+#hn-chat-input {
+    flex: 1; padding: 12px 14px !important; background: var(--hn-chat-input-bg) !important;
+    border: 1px solid rgba(0,0,0,0.1) !important; border-radius: 20px !important;
+    font-size: 14px !important; outline: none; resize: none; overflow: hidden !important;
+    max-height: 120px; font-family: inherit; line-height: 1.45; letter-spacing: -0.005em; box-sizing: border-box;
+    -ms-overflow-style: none !important; scrollbar-width: none !important;
+}
+
+#hn-chat-input::-webkit-scrollbar { display: none !important; }
+.hn-icon-btn-mic { background: #f3f4f6 !important; border: none !important; border-radius: 50% !important; width: 40px; height: 40px; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; margin-bottom: 2px;}
+.hn-icon-btn-mic svg { width: 18px; height: 18px; fill: #666; transition: fill 0.2s ease; }
+.hn-icon-btn-mic:hover { background: #fff4ce !important; transform: scale(1.05); }
+.hn-icon-btn-mic:hover svg { fill: #dca800; }
+.hn-icon-btn-send { background: var(--hn-header-color) !important; border: none !important; border-radius: 50% !important; width: 40px; height: 40px; align-items: center; justify-content: center; cursor: pointer; margin-bottom: 2px;}
+
+#hn-powered-by { text-align: center; padding: 8px 0 16px 0; background: var(--hn-window-powered-bg); }
+#hn-powered-by a { color: #888888 !important; font-size: 10px !important; text-decoration: none !important; font-weight: 500 !important; letter-spacing: 0.01em; display: flex; align-items: center; justify-content: center; gap: 4px; }
+#hn-powered-by svg { fill: #888; width: 11px; height: 11px; }
+
+#hn-voice-overlay {
+    display: none; position: absolute; top: 60px; left: 0; width: 100%; height: calc(100% - 60px);
+    background:
+      radial-gradient(circle at 50% 12%, rgba(255, 220, 50, 0.18), transparent 26%),
+      radial-gradient(circle at 50% 84%, rgba(255, 220, 50, 0.08), transparent 34%),
+      linear-gradient(180deg, rgba(10,10,10,0.98), rgba(22,22,22,0.96));
+    backdrop-filter: var(--hn-window-overlay-backdrop); -webkit-backdrop-filter: var(--hn-window-overlay-backdrop);
+    z-index: 100; flex-direction: column; align-items: center; justify-content: center;
+    animation: hnFadeIn 0.3s ease;
+    overflow: hidden;
+    color: #f8fafc;
+}
+#hn-voice-overlay::before {
+    content: "";
+    position: absolute;
+    top: 26px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(92%, 332px);
+    height: 142px;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.72) 0 1.4px, transparent 1.8px);
+    background-size: 18px 18px;
+    opacity: 0.16;
+    filter: blur(0.2px);
+    mask-image: linear-gradient(180deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.46) 65%, transparent 100%);
+    pointer-events: none;
+}
+#hn-voice-overlay::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 42px;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 200px;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(255, 220, 50, 0.2), transparent 68%);
+    filter: blur(18px);
+    opacity: 0.52;
+    pointer-events: none;
+}
+.hn-voice-mode-label {
+    position: absolute;
+    left: 50%;
+    top: 30px;
+    transform: translateX(-50%);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.66);
+}
+
+@keyframes hnFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+#hn-close-voice-btn { position: absolute; top: 18px; right: 24px; border: none; cursor: pointer; padding: 8px; border-radius: 50%; background: rgba(255,255,255,0.08); display: flex; transition: 0.2s; z-index: 2;}
+#hn-close-voice-btn:hover { background: rgba(255,255,255,0.14); }
+#hn-close-voice-btn svg { width: 16px; height: 16px; fill: #ffffff; }
+.hn-orb-container {
+    position: relative;
+    width: min(86%, 310px);
+    height: 232px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.hn-orb {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.35s ease, filter 0.35s ease;
+}
+.hn-orb-field {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(100%, 340px);
+    height: 92px;
+    opacity: 0.44;
+    pointer-events: none;
+}
+.hn-orb-field--top {
+    top: -2px;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.82) 0 1.4px, transparent 1.85px);
+    background-size: 18px 18px;
+    clip-path: polygon(0 24%, 12% 6%, 30% 18%, 50% 0, 68% 17%, 88% 6%, 100% 26%, 100% 100%, 0 100%);
+    filter: blur(0.2px);
+}
+.hn-orb-field--bottom {
+    bottom: 10px;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.08) 0 1.2px, transparent 1.7px);
+    background-size: 16px 16px;
+    opacity: 0.18;
+    clip-path: ellipse(46% 50% at 50% 50%);
+}
+.hn-orb-core {
+    position: relative;
+    width: 152px;
+    height: 152px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 50% 44%, rgba(255,255,255,0.16), rgba(255, 220, 50, 0.36) 28%, rgba(255, 220, 50, 0.12) 42%, rgba(18, 18, 18, 0.96) 80%);
+    border: 1px solid rgba(255, 220, 50, 0.34);
+    box-shadow:
+      0 20px 48px rgba(0, 0, 0, 0.34),
+      0 0 34px rgba(255, 220, 50, 0.1),
+      inset 0 0 28px rgba(255,255,255,0.08);
+}
+.hn-orb-core::before {
+    content: "";
+    position: absolute;
+    inset: 11px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+.hn-orb-core::after {
+    content: "";
+    position: absolute;
+    inset: -16px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 220, 50, 0.16);
+}
+.hn-voice-wave-svg {
+    position: relative;
+    width: 98px;
+    height: 48px;
+    z-index: 1;
+    overflow: visible;
+    filter: drop-shadow(0 0 16px rgba(255, 220, 50, 0.42));
+}
+.hn-wave-path {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transform-box: fill-box;
+    transform-origin: center;
+}
+.hn-wave-path--gold {
+    stroke: rgba(255, 220, 50, 0.95);
+    stroke-width: 5.5;
+}
+.hn-wave-path--light {
+    stroke: rgba(255, 248, 214, 0.88);
+    stroke-width: 3.2;
+}
+.hn-wave-glow {
+    position: absolute;
+    inset: auto;
+    width: 82px;
+    height: 82px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 220, 50, 0.46), transparent 70%);
+    filter: blur(13px);
+    opacity: 0.62;
+}
+.hn-orb-listening .hn-orb-core {
+    box-shadow:
+      0 24px 58px rgba(0, 0, 0, 0.38),
+      0 0 44px rgba(255, 220, 50, 0.18),
+      inset 0 0 30px rgba(255,255,255,0.16);
+}
+.hn-orb-listening .hn-wave-path {
+    animation: hnVoiceWaveListening 1.55s ease-in-out infinite;
+}
+.hn-orb-listening .hn-wave-path--light {
+    animation-delay: 0.16s;
+}
+.hn-orb-thinking .hn-wave-path {
+    animation: hnVoiceWaveThinking 2.25s ease-in-out infinite;
+}
+.hn-orb-thinking .hn-wave-path--light {
+    animation-delay: 0.22s;
+}
+.hn-orb-speaking .hn-wave-path {
+    animation: hnVoiceWaveSpeaking 0.9s ease-in-out infinite;
+}
+.hn-orb-speaking .hn-wave-path--light {
+    animation-delay: 0.12s;
+}
+.hn-orb-speaking .hn-orb-core {
+    border-color: rgba(255, 220, 50, 0.58);
+    box-shadow:
+      0 24px 58px rgba(220, 168, 0, 0.25),
+      inset 0 0 36px rgba(255,255,255,0.22);
+}
+.hn-orb-thinking .hn-orb-field--top {
+    opacity: 0.5;
+    animation: hnVoiceFieldDrift 3.2s linear infinite;
+}
+.hn-orb-speaking .hn-orb-field--top {
+    opacity: 0.58;
+    animation: hnVoiceFieldPulse 1s ease-in-out infinite;
+}
+.hn-orb-listening .hn-orb-field--top {
+    animation: hnVoiceFieldPulse 1.6s ease-in-out infinite;
+}
+@keyframes hnVoiceWaveListening {
+  0%, 100% { transform: scaleY(0.82) translateY(0); opacity: 0.86; }
+  50% { transform: scaleY(1.08) translateY(-1px); opacity: 1; }
+}
+@keyframes hnVoiceWaveThinking {
+  0%, 100% { transform: scaleX(0.94) scaleY(0.72); opacity: 0.76; }
+  50% { transform: scaleX(1.02) scaleY(0.94); opacity: 0.92; }
+}
+@keyframes hnVoiceWaveSpeaking {
+  0%, 100% { transform: scaleX(0.95) scaleY(0.78); opacity: 0.9; }
+  35% { transform: scaleX(1.04) scaleY(1.26); opacity: 1; }
+  65% { transform: scaleX(0.98) scaleY(1.08); opacity: 0.96; }
+}
+@keyframes hnVoiceFieldPulse {
+  0%, 100% { transform: translateX(-50%) scaleY(0.94); opacity: 0.34; }
+  50% { transform: translateX(-50%) scaleY(1.08); opacity: 0.58; }
+}
+@keyframes hnVoiceFieldDrift {
+  0% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(4px); }
+  100% { transform: translateX(-50%) translateY(0); }
+}
+
+#hn-voice-transcript {
+    font-size: 14px;
+    color: rgba(255,255,255,0.78);
+    width: min(82%, 320px);
+    max-width: 82%;
+    text-align: center;
+    min-height: 54px;
+    font-style: italic;
+    line-height: 1.5;
+    transition: font-size 0.2s ease, color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    padding: 12px 16px;
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+#hn-voice-transcript.hn-voice-transcript-active {
+    font-size: 13px;
+    line-height: 1.52;
+    color: rgba(255,255,255,0.92);
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    border-color: rgba(255,255,255,0.14);
+    background: rgba(255,255,255,0.08);
+}
+#hn-voice-send-btn {
+    display: none; background: linear-gradient(135deg, rgba(255, 220, 50, 0.96), rgba(224, 170, 0, 0.96)) !important; color: #101010 !important;
+    padding: 12px 28px !important; border-radius: 24px !important;
+    font-weight: 600 !important; cursor: pointer; border: none !important;
+    margin-top: 18px; box-shadow: 0 12px 32px rgba(0,0,0,0.22); transition: 0.2s;
+}
+#hn-voice-send-btn:hover { transform: scale(1.05); }
+#hn-voice-status { font-size: 16px; font-weight: 600; color: #ffffff; margin-bottom: 12px; letter-spacing: 0.5px;}
+</style>
+
+<div id="heynaj-chat-widget">
+<div id="hn-chat-callout" class="hn-callout-animate-breathing hn-callout-style-pill" onclick="hnHandleCalloutClick()">Got questions? Chat with us!</div>
+<div id="hn-chat-window">
+<div id="hn-chat-header">
+<div style="display: flex; align-items: center; gap: 8px;">
+<span id="hn-header-title">[AI_NAME]</span>
+</div>
+<div class="hn-header-actions">
+<button class="hn-header-icon-btn hn-header-icon-btn--voice" id="hn-header-voice-btn" onclick="hnOpenVoiceScreen()" title="Talk to AI" aria-label="Talk to AI"><svg viewBox="0 0 24 24"><path d="M6.62 10.79a15.91 15.91 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.11.37 2.3.56 3.58.56a1 1 0 011 1V20a1 1 0 01-1 1C10.3 21 3 13.7 3 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.28.19 2.47.56 3.58a1 1 0 01-.24 1.01l-2.2 2.2z"/></svg></button>
+<button class="hn-header-icon-btn" onclick="hnRestartChat()" title="Restart Chat"><svg viewBox="0 0 24 24"><path d="M17.65 6.35A7.95 7.95 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></button>
+<button class="hn-header-icon-btn" onclick="hnToggleChat()" title="Minimize"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+</div>
+</div>
+<div id="hn-pre-chat-form">
+<div id="hn-promo-preview-slot" class="hn-promo-preview-slot"></div>
+<div class="hn-form-desc" id="hn-form-desc-text">Please introduce yourself so we can better assist you today.</div>
+<div id="hn-form-error" class="hn-form-error"></div>
+<input type="text" id="hn-lead-name" class="hn-lead-input" placeholder="Your Name" required>
+<input type="email" id="hn-lead-email" class="hn-lead-input" placeholder="Email Address" required>
+<input type="tel" id="hn-lead-phone" class="hn-lead-input" placeholder="Phone Number" required>
+<button id="hn-start-chat-btn" onclick="hnStartChat()">Start Session</button>
+<div id="hn-logo-container"><img id="hn-form-logo" src="https://res.cloudinary.com/dt5j91krt/image/upload/v1775798166/HeyNaj_Logo_Widget_sfb5pe.png" class="hn-form-logo"></div>
+<div class="hn-disclaimer" id="hn-consent-text">By chatting, you agree to allow us to contact you regarding your inquiry.</div>
+</div>
+
+<div id="hn-chat-messages"></div>
+
+<div id="hn-voice-overlay">
+    <button id="hn-close-voice-btn" onclick="hnCloseVoiceScreen()" title="Return to text chat"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+    <div class="hn-voice-mode-label">Talk to AI</div>
+    <div class="hn-orb-container" onclick="hnOrbClicked()">
+        <div id="hn-main-orb" class="hn-orb">
+            <div class="hn-orb-field hn-orb-field--top"></div>
+            <div class="hn-orb-core">
+                <div class="hn-wave-glow"></div>
+                <svg class="hn-voice-wave-svg" viewBox="0 0 120 56" aria-hidden="true">
+                    <path class="hn-wave-path hn-wave-path--gold" d="M8 28C16 28 18 16 26 16C34 16 36 40 44 40C52 40 54 12 62 12C70 12 72 44 80 44C88 44 90 20 98 20C106 20 108 28 112 28" />
+                    <path class="hn-wave-path hn-wave-path--light" d="M10 30C18 30 20 20 28 20C36 20 38 36 46 36C54 36 56 18 64 18C72 18 74 38 82 38C90 38 92 24 100 24C106 24 108 28 110 28" />
+                </svg>
+            </div>
+            <div class="hn-orb-field hn-orb-field--bottom"></div>
+        </div>
+    </div>
+    <div id="hn-voice-status">Tap waveform to speak</div>
+    <div id="hn-voice-transcript"></div>
+    <button id="hn-voice-send-btn" onclick="hnSendVoiceNow()">Send Now</button>
+</div>
+
+<div id="hn-quick-replies-container"></div>
+<div id="hn-chat-input-area">
+<textarea id="hn-chat-input" placeholder="Type a message..." rows="1" onkeydown="hnHandleEnter(event)" oninput="hnHandleInput(this)"></textarea>
+<button class="hn-icon-btn-mic" id="hn-mic-btn" style="display: none;" onclick="hnOpenVoiceScreen()" title="Talk to AI" aria-hidden="true" tabindex="-1"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg></button>
+<button class="hn-icon-btn-send" id="hn-send-btn" style="display: none;" onclick="hnSendMessage()"><svg viewBox="0 0 24 24" width="18" height="18" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
+</div>
+<div id="hn-powered-by"><a href="https://heynajflow.com" target="_blank"><svg viewBox="0 0 24 24"><path d="M13 3L4 14h7v7l9-11h-7z"/></svg> Powered by HeyNaj</a></div>
+</div>
+<div id="hn-chat-bubble" onclick="hnToggleChat()"><img id="hn-custom-bubble-logo" src="https://res.cloudinary.com/dt5j91krt/image/upload/v1775798166/HeyNaj_Logo_Widget_sfb5pe.png" alt="Chat"></div>
+</div>
+
+<script>
+const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbybNgIc64SnrZQTv4a-c5rTplxrqRPrbxg5oKNLgExdpdt0kr0a2OXco9-inYkdZUg6yg/exec";
+
+const HN_WIDGET_DEFAULTS = {
+    widgetLogoUrl: "https://res.cloudinary.com/dt5j91krt/image/upload/v1775798166/HeyNaj_Logo_Widget_sfb5pe.png",
+    widgetHeaderColor: "#1a1a1a",
+    attentionMode: "callout",
+    widgetWindowLook: "default-glass",
+    widgetWindowStyle: "default",
+    calloutText: "Got questions? Chat with us!",
+    calloutBorderColor: "#ffdc32",
+    calloutAnimation: "breathing",
+    calloutDelaySeconds: 5,
+    calloutStyle: "pill",
+    bookingLink: "",
+    promo: {
+        entryMode: "callout-trigger",
+        type: "promotion",
+        teaserBorderColor: "#ffdc32",
+        teaserAnimation: "breathing",
+        imageUrl: "",
+        title: "",
+        offerDetails: "",
+        description: "",
+        ctaText: "Learn More",
+        ctaType: "external-url",
+        ctaTarget: "",
+        startAt: "",
+        endAt: "",
+        showCountdown: false,
+        dismissible: true,
+        isActive: false
+    },
+    introDisclaimer: "Please introduce yourself so we can better assist you today.",
+    consentDisclaimer: "By chatting, you agree to allow us to contact you regarding your inquiry.",
+    leadCaptureMode: "required",
+    welcomeMessage: "Hi [name]! I am [bot]. How can I help you today?",
+    inactivityTimeoutSeconds: 60,
+    enableVoice: false
+};
+
+let hnChatHistory = [];
+let hnSessionId = Date.now().toString(36);
+let hnUserName = "";
+let hnUserEmail = "";
+let hnUserPhone = "";
+let hnCachedQuickReplies = [];
+let hnDynamicBotName = "[AI_NAME]";
+let hnInactivityTimer;
+let hnRecognition;
+let hnIsRecording = false;
+let hnCurrentAudio = null;
+let hnFullTranscript = "";
+let hnVoiceTimeout;
+let hnWidgetSettings = Object.assign({}, HN_WIDGET_DEFAULTS);
+let hnHasStartedChat = false;
+let hnCalloutTimer = null;
+let hnIsSendingMessage = false;
+let hnVoiceSendLocked = false;
+let hnVoiceUiBusy = false;
+let hnPromoTriggeredOpen = false;
+let hnPromoDismissed = false;
+let hnSettingsLoaded = false;
+let hnPromoCountdownTimer = null;
+
+if ("SpeechRecognition" in window || "webkitSpeechRecognition" in window) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    hnRecognition = new SpeechRecognition();
+    hnRecognition.continuous = true;
+    hnRecognition.interimResults = true;
+
+    hnRecognition.onstart = function() {
+        hnIsRecording = true;
+        hnFullTranscript = "";
+        hnVoiceSendLocked = false;
+        hnVoiceUiBusy = false;
+        document.getElementById("hn-main-orb").className = "hn-orb hn-orb-listening";
+        document.getElementById("hn-voice-status").innerText = "Listening...";
+        hnSetVoiceTranscript("");
+        document.getElementById("hn-voice-send-btn").style.display = "none";
+        if (hnCurrentAudio) { hnCurrentAudio.pause(); hnCurrentAudio = null; }
+    };
+
+    hnRecognition.onresult = function(event) {
+        clearTimeout(hnVoiceTimeout);
+        let interimTranscript = "";
+        hnFullTranscript = "";
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+            if (event.results[i].isFinal) {
+                hnFullTranscript += event.results[i][0].transcript + " ";
+            } else {
+                interimTranscript += event.results[i][0].transcript;
+            }
+        }
+
+        const displayText = hnFullTranscript + interimTranscript;
+        const input = document.getElementById("hn-chat-input");
+        hnSetVoiceTranscript(displayText, "active");
+        input.value = displayText;
+        hnHandleInput(input);
+
+        if (hnVoiceSendLocked || hnVoiceUiBusy) {
+            document.getElementById("hn-voice-send-btn").style.display = "none";
+            document.getElementById("hn-voice-status").innerText = "Thinking...";
+            return;
+        }
+
+        if (displayText.trim().length > 0) {
+            document.getElementById("hn-voice-send-btn").style.display = "inline-block";
+        }
+
+        if (!hnVoiceSendLocked && hnFullTranscript.trim().length > 0 && interimTranscript.trim().length === 0) {
+            document.getElementById("hn-voice-status").innerText = "Thinking...";
+            hnVoiceTimeout = setTimeout(() => { hnSendVoiceNow(); }, 2500);
+        } else {
+            document.getElementById("hn-voice-status").innerText = "Listening...";
+        }
+    };
+
+    hnRecognition.onerror = function(event) {
+        if (event.error === "not-allowed") {
+            document.getElementById("hn-voice-status").innerText = "Microphone access denied.";
+            setTimeout(() => { hnCloseVoiceScreen(); }, 2000);
+        } else {
+            hnResetOrbState();
+        }
+    };
+
+    hnRecognition.onend = function() { hnIsRecording = false; };
+}
+
+function hnNormalizeWidgetSettings(data) {
+    const incoming = data.widgetSettings || {};
+    const incomingPromo = incoming.promo || data.promo || {};
+    const hasServerPromoActive = Object.prototype.hasOwnProperty.call(incomingPromo, "isActive");
+    const attentionMode = hnNormalizeAttentionMode(incoming.attentionMode || data.attentionMode || HN_WIDGET_DEFAULTS.attentionMode);
+    const promo = {
+        entryMode: hnNormalizePromoEntryMode(incomingPromo.entryMode || HN_WIDGET_DEFAULTS.promo.entryMode),
+        type: hnNormalizePromoType(incomingPromo.type || HN_WIDGET_DEFAULTS.promo.type),
+        imageUrl: incomingPromo.imageUrl || HN_WIDGET_DEFAULTS.promo.imageUrl,
+        title: incomingPromo.title || HN_WIDGET_DEFAULTS.promo.title,
+        offerDetails: incomingPromo.offerDetails || HN_WIDGET_DEFAULTS.promo.offerDetails,
+        description: incomingPromo.description || HN_WIDGET_DEFAULTS.promo.description,
+        ctaText: incomingPromo.ctaText || HN_WIDGET_DEFAULTS.promo.ctaText,
+        ctaType: hnNormalizePromoCtaType(incomingPromo.ctaType || HN_WIDGET_DEFAULTS.promo.ctaType),
+        ctaTarget: incomingPromo.ctaTarget || HN_WIDGET_DEFAULTS.promo.ctaTarget,
+        startAt: incomingPromo.startAt || HN_WIDGET_DEFAULTS.promo.startAt,
+        endAt: incomingPromo.endAt || HN_WIDGET_DEFAULTS.promo.endAt,
+        showCountdown: incomingPromo.showCountdown === true || String(incomingPromo.showCountdown).toLowerCase() === "true",
+        dismissible: incomingPromo.dismissible !== false && String(incomingPromo.dismissible).toLowerCase() !== "false"
+    };
+    return {
+        widgetLogoUrl: incoming.widgetLogoUrl || data.widgetLogoUrl || HN_WIDGET_DEFAULTS.widgetLogoUrl,
+        attentionMode: attentionMode,
+        widgetHeaderColor: incoming.widgetHeaderColor || data.widgetHeaderColor || HN_WIDGET_DEFAULTS.widgetHeaderColor,
+        widgetWindowLook: hnNormalizeWindowLook(incoming.widgetWindowLook || data.widgetWindowLook || HN_WIDGET_DEFAULTS.widgetWindowLook),
+        widgetWindowStyle: hnNormalizeWindowStyle(incoming.widgetWindowStyle || data.widgetWindowStyle || HN_WIDGET_DEFAULTS.widgetWindowStyle),
+        calloutText: incoming.calloutText || data.calloutText || HN_WIDGET_DEFAULTS.calloutText,
+        calloutBorderColor: incoming.calloutBorderColor || data.calloutBorderColor || HN_WIDGET_DEFAULTS.calloutBorderColor,
+        calloutAnimation: hnNormalizeCalloutAnimation(incoming.calloutAnimation || data.calloutAnimation || HN_WIDGET_DEFAULTS.calloutAnimation),
+        calloutDelaySeconds: Number(incoming.calloutDelaySeconds || data.calloutDelaySeconds || HN_WIDGET_DEFAULTS.calloutDelaySeconds) || HN_WIDGET_DEFAULTS.calloutDelaySeconds,
+        calloutStyle: (incoming.calloutStyle || data.calloutStyle || HN_WIDGET_DEFAULTS.calloutStyle).toString().toLowerCase(),
+        bookingLink: data.bookingLink || HN_WIDGET_DEFAULTS.bookingLink,
+        promo: Object.assign({}, promo, {
+            teaserBorderColor:
+                incomingPromo.teaserBorderColor ||
+                data.promoTeaserBorderColor ||
+                incoming.calloutBorderColor ||
+                data.calloutBorderColor ||
+                HN_WIDGET_DEFAULTS.promo.teaserBorderColor ||
+                HN_WIDGET_DEFAULTS.calloutBorderColor,
+            teaserAnimation: hnNormalizeCalloutAnimation(
+                incomingPromo.teaserAnimation ||
+                data.promoTeaserAnimation ||
+                incoming.calloutAnimation ||
+                data.calloutAnimation ||
+                HN_WIDGET_DEFAULTS.promo.teaserAnimation ||
+                HN_WIDGET_DEFAULTS.calloutAnimation
+            ),
+            isActive: hasServerPromoActive
+                ? (incomingPromo.isActive === true || String(incomingPromo.isActive).toLowerCase() === "true")
+                : hnIsPromoActive(attentionMode, promo)
+        }),
+        introDisclaimer: incoming.introDisclaimer || data.introDisclaimer || HN_WIDGET_DEFAULTS.introDisclaimer,
+        consentDisclaimer: incoming.consentDisclaimer || data.consentDisclaimer || HN_WIDGET_DEFAULTS.consentDisclaimer,
+        leadCaptureMode: (incoming.leadCaptureMode || data.leadCaptureMode || HN_WIDGET_DEFAULTS.leadCaptureMode).toString().toLowerCase(),
+        welcomeMessage: data.welcomeMessage || HN_WIDGET_DEFAULTS.welcomeMessage,
+        inactivityTimeoutSeconds: Number(data.inactivityTimeoutSeconds || HN_WIDGET_DEFAULTS.inactivityTimeoutSeconds) || HN_WIDGET_DEFAULTS.inactivityTimeoutSeconds,
+        enableVoice: data.enableVoice === true || String(data.enableVoice).toLowerCase() === "true"
+    };
+}
+
+function hnNormalizeAttentionMode(value) {
+    const normalized = (value || "").toString().trim().toLowerCase();
+    if (normalized === "none") return "none";
+    if (normalized === "promotion" || normalized === "promotion spotlight") return "promotion";
+    return "callout";
+}
+
+function hnNormalizePromoEntryMode(value) {
+    const normalized = (value || "").toString().trim().toLowerCase();
+    if (normalized === "always in chat" || normalized === "always-in-chat") return "always-in-chat";
+    return "callout-trigger";
+}
+
+function hnNormalizePromoType(value) {
+    const normalized = (value || "").toString().trim().toLowerCase();
+    if (normalized === "event") return "event";
+    if (normalized === "announcement") return "announcement";
+    return "promotion";
+}
+
+function hnNormalizeCalloutAnimation(value) {
+    const normalized = (value || "").toString().trim().toLowerCase();
+    const map = {
+        "breathing": "breathing",
+        "none": "none",
+        "float": "float",
+        "bounce": "bounce",
+        "glow": "glow"
+    };
+    return map[normalized] || HN_WIDGET_DEFAULTS.calloutAnimation;
+}
+
+function hnNormalizePromoCtaType(value) {
+    const normalized = (value || "").toString().trim().toLowerCase();
+    const map = {
+        "external url": "external-url",
+        "external-url": "external-url",
+        "booking link": "booking-link",
+        "booking-link": "booking-link",
+        "start chat prompt": "start-chat-prompt",
+        "start-chat-prompt": "start-chat-prompt"
+    };
+    return map[normalized] || HN_WIDGET_DEFAULTS.promo.ctaType;
+}
+
+function hnColorWithAlpha(color, alpha, fallback) {
+    const value = (color || "").toString().trim();
+    const safeFallback = fallback || ("rgba(26, 26, 26, " + alpha + ")");
+    if (!value) return safeFallback;
+
+    const shortHex = value.match(/^#([0-9a-f]{3})$/i);
+    if (shortHex) {
+        const parts = shortHex[1].split("");
+        const r = parseInt(parts[0] + parts[0], 16);
+        const g = parseInt(parts[1] + parts[1], 16);
+        const b = parseInt(parts[2] + parts[2], 16);
+        return "rgba(" + r + ", " + g + ", " + b + ", " + alpha + ")";
+    }
+
+    const longHex = value.match(/^#([0-9a-f]{6})$/i);
+    if (longHex) {
+        const hex = longHex[1];
+        const r = parseInt(hex.substring(0, 2), 16);
+        const g = parseInt(hex.substring(2, 4), 16);
+        const b = parseInt(hex.substring(4, 6), 16);
+        return "rgba(" + r + ", " + g + ", " + b + ", " + alpha + ")";
+    }
+
+    const rgb = value.match(/^rgba?\(([^)]+)\)$/i);
+    if (rgb) {
+        const parts = rgb[1].split(",").map(function(part) {
+            return part.trim();
+        });
+        if (parts.length >= 3) {
+            return "rgba(" + parts[0] + ", " + parts[1] + ", " + parts[2] + ", " + alpha + ")";
+        }
+    }
+
+    return safeFallback;
+}
+
+function hnHasPromoContent(promo) {
+    if (!promo) return false;
+    return !!((promo.title || promo.offerDetails || promo.description || promo.imageUrl || promo.ctaText || "").toString().trim());
+}
+
+function hnParseDateMs(value) {
+    if (!value) return NaN;
+    const parsed = new Date(value);
+    return isNaN(parsed.getTime()) ? NaN : parsed.getTime();
+}
+
+function hnIsPromoActive(attentionMode, promo) {
+    if (attentionMode !== "promotion") return false;
+    if (!promo || !hnHasPromoContent(promo)) return false;
+    const now = Date.now();
+    const startAt = hnParseDateMs(promo.startAt);
+    const endAt = hnParseDateMs(promo.endAt);
+    if (!isNaN(startAt) && now < startAt) return false;
+    if (!isNaN(endAt) && now > endAt) return false;
+    return true;
+}
+
+function hnNormalizeWindowLook(value) {
+    const normalized = (value || "").toString().trim().toLowerCase();
+    const map = {
+        "default glass": "default-glass",
+        "default-glass": "default-glass",
+        "solid white": "solid-white",
+        "solid-white": "solid-white",
+        "soft gray": "soft-gray",
+        "soft grey": "soft-gray",
+        "soft-gray": "soft-gray",
+        "soft cream": "soft-cream",
+        "soft-cream": "soft-cream",
+        "soft gold": "soft-gold",
+        "soft-gold": "soft-gold"
+    };
+    return map[normalized] || HN_WIDGET_DEFAULTS.widgetWindowLook;
+}
+
+function hnNormalizeWindowStyle(value) {
+    const normalized = (value || "").toString().trim().toLowerCase();
+    const map = {
+        "default": "default",
+        "square": "square",
+        "soft rounded": "soft-rounded",
+        "soft-rounded": "soft-rounded",
+        "bordered": "bordered",
+        "shadowed": "shadowed"
+    };
+    return map[normalized] || HN_WIDGET_DEFAULTS.widgetWindowStyle;
+}
+
+function hnGetWindowLookTokens(look) {
+    const tokenMap = {
+        "default-glass": {
+            windowBg: "rgba(255, 255, 255, 0.85)",
+            windowBorder: "rgba(255, 255, 255, 0.5)",
+            windowShadow: "0 24px 60px rgba(0,0,0,0.12)",
+            windowBackdrop: "blur(25px)",
+            windowOverlayBackdrop: "blur(15px)",
+            windowSurfaceBg: "rgba(255,255,255,0.92)",
+            windowPoweredBg: "rgba(255,255,255,0.92)",
+            windowOverlayBg: "rgba(255,255,255,0.95)",
+            formInputBg: "rgba(255,255,255,0.6)",
+            chatInputBg: "#ffffff"
+        },
+        "solid-white": {
+            windowBg: "#ffffff",
+            windowBorder: "rgba(15,23,42,0.08)",
+            windowShadow: "0 24px 60px rgba(0,0,0,0.12)",
+            windowBackdrop: "none",
+            windowOverlayBackdrop: "none",
+            windowSurfaceBg: "#ffffff",
+            windowPoweredBg: "#ffffff",
+            windowOverlayBg: "#ffffff",
+            formInputBg: "#ffffff",
+            chatInputBg: "#ffffff"
+        },
+        "soft-gray": {
+            windowBg: "#f4f5f7",
+            windowBorder: "rgba(15,23,42,0.08)",
+            windowShadow: "0 24px 60px rgba(15,23,42,0.12)",
+            windowBackdrop: "none",
+            windowOverlayBackdrop: "none",
+            windowSurfaceBg: "#f8fafc",
+            windowPoweredBg: "#f8fafc",
+            windowOverlayBg: "#f4f5f7",
+            formInputBg: "#ffffff",
+            chatInputBg: "#ffffff"
+        },
+        "soft-cream": {
+            windowBg: "#fff8ed",
+            windowBorder: "rgba(120,53,15,0.10)",
+            windowShadow: "0 24px 60px rgba(120,53,15,0.10)",
+            windowBackdrop: "none",
+            windowOverlayBackdrop: "none",
+            windowSurfaceBg: "#fffcf6",
+            windowPoweredBg: "#fffcf6",
+            windowOverlayBg: "#fff8ed",
+            formInputBg: "#ffffff",
+            chatInputBg: "#ffffff"
+        },
+        "soft-gold": {
+            windowBg: "#fff6d8",
+            windowBorder: "rgba(161,98,7,0.12)",
+            windowShadow: "0 24px 60px rgba(161,98,7,0.12)",
+            windowBackdrop: "none",
+            windowOverlayBackdrop: "none",
+            windowSurfaceBg: "#fffbea",
+            windowPoweredBg: "#fffbea",
+            windowOverlayBg: "#fff6d8",
+            formInputBg: "#ffffff",
+            chatInputBg: "#ffffff"
+        }
+    };
+    return tokenMap[look] || tokenMap[HN_WIDGET_DEFAULTS.widgetWindowLook];
+}
+
+function hnGetWindowStyleTokens(style) {
+    const tokenMap = {
+        "default": {
+            radius: "28px",
+            borderWidth: "1px",
+            shadow: "",
+            border: "",
+            promoTeaserRadius: "22px",
+            promoTeaserMediaRadius: "16px",
+            promoTeaserImageRadius: "12px",
+            promoCardRadius: "22px"
+        },
+        "square": {
+            radius: "0px",
+            borderWidth: "1px",
+            shadow: "0 18px 40px rgba(0,0,0,0.12)",
+            border: "",
+            promoTeaserRadius: "0px",
+            promoTeaserMediaRadius: "0px",
+            promoTeaserImageRadius: "0px",
+            promoCardRadius: "0px"
+        },
+        "soft-rounded": {
+            radius: "48px",
+            borderWidth: "1px",
+            shadow: "0 24px 60px rgba(0,0,0,0.12)",
+            border: "",
+            promoTeaserRadius: "30px",
+            promoTeaserMediaRadius: "24px",
+            promoTeaserImageRadius: "20px",
+            promoCardRadius: "28px"
+        },
+        "bordered": {
+            radius: "24px",
+            borderWidth: "2px",
+            shadow: "0 12px 28px rgba(15,23,42,0.07)",
+            border: "rgba(15,23,42,0.18)",
+            promoTeaserRadius: "20px",
+            promoTeaserMediaRadius: "14px",
+            promoTeaserImageRadius: "10px",
+            promoCardRadius: "20px"
+        },
+        "shadowed": {
+            radius: "28px",
+            borderWidth: "1px",
+            shadow: "0 30px 80px rgba(0,0,0,0.24)",
+            border: "",
+            promoTeaserRadius: "22px",
+            promoTeaserMediaRadius: "16px",
+            promoTeaserImageRadius: "12px",
+            promoCardRadius: "22px"
+        }
+    };
+    return tokenMap[style] || tokenMap[HN_WIDGET_DEFAULTS.widgetWindowStyle];
+}
+
+function hnApplyWidgetSettings(settings) {
+    const widget = document.getElementById("heynaj-chat-widget");
+    const callout = document.getElementById("hn-chat-callout");
+    const formLogo = document.getElementById("hn-form-logo");
+    const bubbleLogo = document.getElementById("hn-custom-bubble-logo");
+    const formDesc = document.getElementById("hn-form-desc-text");
+    const consent = document.getElementById("hn-consent-text");
+    const headerTitle = document.getElementById("hn-header-title");
+    const windowLook = hnGetWindowLookTokens(settings.widgetWindowLook);
+    const windowStyle = hnGetWindowStyleTokens(settings.widgetWindowStyle);
+    const promoTeaserBorderColor = (settings.promo && settings.promo.teaserBorderColor) || settings.calloutBorderColor;
+
+    widget.style.setProperty("--hn-header-color", settings.widgetHeaderColor);
+    widget.style.setProperty("--hn-callout-border-color", settings.calloutBorderColor);
+    widget.style.setProperty("--hn-promo-teaser-border-color", promoTeaserBorderColor);
+    widget.style.setProperty("--hn-callout-glow-soft", hnColorWithAlpha(settings.calloutBorderColor, 0.18, "rgba(255, 220, 50, 0.18)"));
+    widget.style.setProperty("--hn-callout-glow-strong", hnColorWithAlpha(settings.calloutBorderColor, 0.34, "rgba(255, 220, 50, 0.34)"));
+    widget.style.setProperty("--hn-promo-teaser-glow-soft", hnColorWithAlpha(promoTeaserBorderColor, 0.18, "rgba(26, 26, 26, 0.18)"));
+    widget.style.setProperty("--hn-promo-teaser-glow-strong", hnColorWithAlpha(promoTeaserBorderColor, 0.32, "rgba(26, 26, 26, 0.32)"));
+    widget.style.setProperty("--hn-window-bg", windowLook.windowBg);
+    widget.style.setProperty("--hn-window-border", windowLook.windowBorder);
+    widget.style.setProperty("--hn-window-shadow", windowLook.windowShadow);
+    widget.style.setProperty("--hn-window-backdrop", windowLook.windowBackdrop);
+    widget.style.setProperty("--hn-window-overlay-backdrop", windowLook.windowOverlayBackdrop);
+    widget.style.setProperty("--hn-window-surface-bg", windowLook.windowSurfaceBg);
+    widget.style.setProperty("--hn-window-powered-bg", windowLook.windowPoweredBg);
+    widget.style.setProperty("--hn-window-overlay-bg", windowLook.windowOverlayBg);
+    widget.style.setProperty("--hn-form-input-bg", windowLook.formInputBg);
+    widget.style.setProperty("--hn-chat-input-bg", windowLook.chatInputBg);
+    widget.style.setProperty("--hn-window-radius", windowStyle.radius);
+    widget.style.setProperty("--hn-window-border-width", windowStyle.borderWidth);
+    widget.style.setProperty("--hn-window-shadow", windowStyle.shadow || windowLook.windowShadow);
+    widget.style.setProperty("--hn-window-border", windowStyle.border || windowLook.windowBorder);
+    widget.style.setProperty("--hn-promo-teaser-radius", windowStyle.promoTeaserRadius || "22px");
+    widget.style.setProperty("--hn-promo-teaser-media-radius", windowStyle.promoTeaserMediaRadius || "16px");
+    widget.style.setProperty("--hn-promo-teaser-image-radius", windowStyle.promoTeaserImageRadius || "12px");
+    widget.style.setProperty("--hn-promo-card-radius", windowStyle.promoCardRadius || "22px");
+
+    if (formLogo) formLogo.src = settings.widgetLogoUrl;
+    if (bubbleLogo) bubbleLogo.src = settings.widgetLogoUrl;
+    if (formDesc) formDesc.innerText = settings.introDisclaimer;
+    if (consent) consent.innerText = settings.consentDisclaimer;
+    if (headerTitle) headerTitle.innerText = hnDynamicBotName;
+
+    hnConfigureAttentionFeature(settings);
+    hnRenderPromoPreview(hnShouldUsePromoEntry());
+    hnUpdateComposerButtons();
+}
+
+function hnConfigureAttentionFeature(settings) {
+    const callout = document.getElementById("hn-chat-callout");
+    if (!callout) return;
+
+    if (!hnSettingsLoaded) {
+        hnHideCallout();
+        return;
+    }
+
+    if (settings.attentionMode === "none") {
+        hnHideCallout();
+        return;
+    }
+
+    if (settings.attentionMode === "promotion" && settings.promo && settings.promo.isActive) {
+        if (settings.promo.entryMode === "callout-trigger" && !hnPromoDismissed) {
+            callout.innerHTML = hnBuildPromoTeaserHtml(settings.promo);
+            callout.className = "hn-callout-promo hn-callout-animate-" + settings.promo.teaserAnimation;
+            hnScheduleCallout(settings.calloutDelaySeconds);
+            return;
+        }
+        hnHideCallout();
+        return;
+    }
+
+    callout.innerText = settings.calloutText;
+    callout.className = "hn-callout-animate-" + settings.calloutAnimation + " hn-callout-style-" + settings.calloutStyle;
+    hnScheduleCallout(settings.calloutDelaySeconds);
+}
+
+function hnHideCallout() {
+    clearTimeout(hnCalloutTimer);
+    const callout = document.getElementById("hn-chat-callout");
+    if (!callout) return;
+    callout.classList.remove("hn-show-callout");
+    callout.style.visibility = "hidden";
+    callout.style.opacity = "0";
+}
+
+function hnScheduleCallout(delaySeconds) {
+    clearTimeout(hnCalloutTimer);
+    const callout = document.getElementById("hn-chat-callout");
+    if (!callout) return;
+    callout.classList.remove("hn-show-callout");
+    callout.style.visibility = "";
+    callout.style.opacity = "";
+
+    hnCalloutTimer = setTimeout(() => {
+        const win = document.getElementById("hn-chat-window");
+        if (win && win.style.display !== "flex") {
+            callout.classList.add("hn-show-callout");
+        }
+    }, Math.max(0, Number(delaySeconds) || 0) * 1000);
+}
+
+function hnBuildPromoTeaserText(promo) {
+    if (!promo) return "Tap to preview this offer.";
+    const title = (promo.title || "").toString().trim();
+    const offerDetails = (promo.offerDetails || "").toString().trim();
+    const description = (promo.description || "").toString().trim();
+    const base = (description || (offerDetails && offerDetails !== title ? offerDetails : "") || promo.ctaText || "Tap to preview this offer.").toString().trim();
+    return base.length > 92 ? base.substring(0, 89).trimEnd() + "..." : base;
+}
+
+function hnBuildPromoTeaserKicker(promo) {
+    if (!promo) return "Live promo";
+    if (promo.type === "event") return "Live event";
+    if (promo.type === "announcement") return "Latest update";
+    return "Live promo";
+}
+
+function hnBuildPromoTeaserHtml(promo) {
+    if (!promo) return "";
+    const title = hnEscapeHtml((promo.title || promo.offerDetails || promo.ctaText || "Special offer").toString().trim());
+    const copy = hnEscapeHtml(hnBuildPromoTeaserText(promo));
+    const kicker = hnEscapeHtml(hnBuildPromoTeaserKicker(promo));
+    const dismissBtn = promo.dismissible ? '<button class="hn-callout-promo-close" onclick="hnDismissPromo(event)" aria-label="Dismiss promotion">×</button>' : '';
+    const media = promo.imageUrl
+        ? '<div class="hn-callout-promo-media"><img src="' + hnEscapeHtml(promo.imageUrl) + '" alt="' + title + '"></div>'
+        : '<div class="hn-callout-promo-media hn-callout-promo-media-placeholder"><span class="hn-callout-promo-icon">&#128227;</span></div>';
+
+    return ''
+        + '<div class="hn-callout-promo-inner">'
+        + dismissBtn
+        + '<div class="hn-callout-promo-header">'
+        + '<div class="hn-callout-promo-content">'
+        + '<div class="hn-callout-promo-kicker">' + kicker + '</div>'
+        + '<div class="hn-callout-promo-title">' + title + '</div>'
+        + '<div class="hn-callout-promo-copy">' + copy + '</div>'
+        + '</div>'
+        + '</div>'
+        + media
+        + '</div>';
+}
+
+function hnShouldUsePromoEntry() {
+    const promo = hnWidgetSettings.promo;
+    if (hnPromoDismissed || !promo || !promo.isActive || hnWidgetSettings.attentionMode !== "promotion") return false;
+    if (promo.entryMode === "always-in-chat") return true;
+    if (promo.entryMode === "callout-trigger") return hnPromoTriggeredOpen === true;
+    return false;
+}
+
+function hnEscapeHtml(text) {
+    return (text || "").toString()
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+function hnFormatPromoTypeLabel(type) {
+    const map = { promotion: "Promotion Spotlight", event: "Upcoming Event", announcement: "Announcement" };
+    return map[type] || "Promotion Spotlight";
+}
+
+function hnBuildPromoCardHtml(previewMode) {
+    const promo = hnWidgetSettings.promo;
+    if (!promo || !promo.isActive || hnPromoDismissed) return "";
+
+    const title = hnEscapeHtml(promo.title || "");
+    const offer = hnEscapeHtml(promo.offerDetails || "");
+    const desc = hnEscapeHtml(promo.description || "").replace(/\n/g, "<br>");
+    const image = promo.imageUrl ? '<img class="hn-promo-image" src="' + hnEscapeHtml(promo.imageUrl) + '" alt="' + title + '">' : "";
+    const dismissBtn = promo.dismissible ? '<button class="hn-promo-dismiss" onclick="hnDismissPromo(event)" aria-label="Dismiss promotion">×</button>' : "";
+    const countdown = promo.showCountdown && promo.endAt
+        ? '<div class="hn-promo-countdown" data-hn-promo-countdown="' + hnEscapeHtml(promo.endAt) + '">Offer ends soon</div>'
+        : "";
+    const helper = previewMode && hnWidgetSettings.leadCaptureMode === "required"
+        ? '<div class="hn-promo-helper">Start your session below to continue with this offer.</div>'
+        : "";
+
+    return ''
+        + '<div class="hn-promo-card">'
+        + dismissBtn
+        + '<div class="hn-promo-badge">📣 ' + hnEscapeHtml(hnFormatPromoTypeLabel(promo.type)) + '</div>'
+        + (title ? '<div class="hn-promo-title">' + title + '</div>' : '')
+        + (offer ? '<div class="hn-promo-offer">' + offer + '</div>' : '')
+        + image
+        + (desc ? '<div class="hn-promo-desc">' + desc + '</div>' : '')
+        + helper
+        + '<div class="hn-promo-footer">'
+        + countdown
+        + '<button class="hn-promo-cta" onclick="hnHandlePromoCta(event)">' + hnEscapeHtml(promo.ctaText || "Learn More") + '</button>'
+        + '</div>'
+        + '</div>';
+}
+
+function hnRefreshPromoCountdowns() {
+    const nodes = document.querySelectorAll("[data-hn-promo-countdown]");
+    if (!nodes.length) return;
+    const now = Date.now();
+    nodes.forEach(node => {
+        const endAt = hnParseDateMs(node.getAttribute("data-hn-promo-countdown"));
+        if (isNaN(endAt)) {
+            node.innerText = "";
+            return;
+        }
+        const diff = endAt - now;
+        if (diff <= 0) {
+            node.innerText = "Offer ended";
+            return;
+        }
+        const totalSeconds = Math.floor(diff / 1000);
+        const days = Math.floor(totalSeconds / 86400);
+        const hours = Math.floor((totalSeconds % 86400) / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+        const parts = [];
+        if (days > 0) parts.push(String(days).padStart(2, "0") + "d");
+        parts.push(String(hours).padStart(2, "0") + "h");
+        parts.push(String(minutes).padStart(2, "0") + "m");
+        parts.push(String(seconds).padStart(2, "0") + "s");
+        node.innerText = "Ends in " + parts.join(" ");
+    });
+}
+
+function hnEnsurePromoCountdownTimer() {
+    clearInterval(hnPromoCountdownTimer);
+    hnRefreshPromoCountdowns();
+    if (document.querySelector("[data-hn-promo-countdown]")) {
+        hnPromoCountdownTimer = setInterval(hnRefreshPromoCountdowns, 1000);
+    }
+}
+
+function hnRenderPromoPreview(shouldShow) {
+    const slot = document.getElementById("hn-promo-preview-slot");
+    const form = document.getElementById("hn-pre-chat-form");
+    if (!slot) return;
+    if (!shouldShow || hnHasStartedChat) {
+        slot.innerHTML = "";
+        slot.style.display = "none";
+        if (form) form.classList.remove("hn-pre-chat-form-promo");
+        hnEnsurePromoCountdownTimer();
+        return;
+    }
+    slot.innerHTML = hnBuildPromoCardHtml(true);
+    slot.style.display = slot.innerHTML ? "block" : "none";
+    if (form) {
+        form.classList.toggle("hn-pre-chat-form-promo", !!slot.innerHTML);
+        form.scrollTop = 0;
+    }
+    hnEnsurePromoCountdownTimer();
+}
+
+function hnAppendPromoCard(options) {
+    const keepTopVisible = !!(options && options.keepTopVisible);
+    const container = document.getElementById("hn-chat-messages");
+    const html = hnBuildPromoCardHtml(false);
+    if (!container || !html) return;
+    const card = document.createElement("div");
+    card.className = "hn-message hn-ai-message hn-promo-message";
+    card.innerHTML = html;
+    container.appendChild(card);
+    hnEnsurePromoCountdownTimer();
+    if (keepTopVisible) {
+        hnScrollToTop();
+        return;
+    }
+    hnScrollToBottom();
+}
+
+function hnDismissPromo(event) {
+    if (event) event.stopPropagation();
+    hnPromoDismissed = true;
+    hnPromoTriggeredOpen = false;
+    document.querySelectorAll(".hn-promo-card").forEach(node => {
+        const parent = node.closest(".hn-promo-preview-slot, .hn-promo-message");
+        if (parent && parent.classList.contains("hn-promo-preview-slot")) {
+            parent.innerHTML = "";
+            parent.style.display = "none";
+        } else if (parent) {
+            parent.remove();
+        } else {
+            node.remove();
+        }
+    });
+    const preview = document.getElementById("hn-promo-preview-slot");
+    if (preview) {
+        preview.innerHTML = "";
+        preview.style.display = "none";
+    }
+    if (hnHasStartedChat && hnChatHistory.length === 0) {
+        const quickReplies = document.getElementById("hn-quick-replies-container");
+        if (hnCachedQuickReplies.length > 0) {
+            hnRenderQuickReplies();
+            if (quickReplies) quickReplies.style.display = "flex";
+        } else if (quickReplies) {
+            quickReplies.style.display = "none";
+        }
+        hnScrollToTop();
+    }
+    hnEnsurePromoCountdownTimer();
+    hnConfigureAttentionFeature(hnWidgetSettings);
+}
+
+function hnHandlePromoCta(event) {
+    if (event) event.stopPropagation();
+    const promo = hnWidgetSettings.promo || {};
+    if (promo.ctaType === "external-url") {
+        if (promo.ctaTarget) window.open(promo.ctaTarget, "_blank", "noopener,noreferrer");
+        return;
+    }
+    if (promo.ctaType === "booking-link") {
+        if (hnWidgetSettings.bookingLink) window.open(hnWidgetSettings.bookingLink, "_blank", "noopener,noreferrer");
+        return;
+    }
+    const prompt = (promo.ctaTarget || ("I want to know more about " + (promo.title || "this offer"))).trim();
+    if (!hnHasStartedChat) {
+        if (hnWidgetSettings.leadCaptureMode === "required") {
+            hnShowFormError("Start your session below to continue with this offer.");
+            const form = document.getElementById("hn-pre-chat-form");
+            const nameInput = document.getElementById("hn-lead-name");
+            if (form) form.scrollTop = form.scrollHeight;
+            if (nameInput) {
+                nameInput.focus();
+                try { nameInput.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e) {}
+            }
+            return;
+        }
+        hnBeginChatSession({ skipLeadCapture: true, promoFirst: true, suppressWelcome: true });
+    }
+    const input = document.getElementById("hn-chat-input");
+    input.value = prompt;
+    hnHandleInput(input);
+    hnSendMessage();
+}
+
+function hnBuildWelcomeMessage() {
+    const rawName = (hnUserName || "").trim();
+    const firstName = rawName ? rawName.split(" ")[0] : "";
+    let message = hnWidgetSettings.welcomeMessage || HN_WIDGET_DEFAULTS.welcomeMessage;
+    message = message.replace(/\[bot\]/gi, hnDynamicBotName);
+    message = message.replace(/\[name\]/gi, firstName);
+    message = message.replace(/\s{2,}/g, " ").replace(/\s+!/g, "!").trim();
+    if (message.indexOf("Hi !") === 0) message = message.replace("Hi !", "Hi!");
+    if (!message) message = "Hi! I am " + hnDynamicBotName + ". How can I help you today?";
+    return message;
+}
+
+function hnUpdateComposerButtons() {
+    const input = document.getElementById("hn-chat-input");
+    const micBtn = document.getElementById("hn-mic-btn");
+    const sendBtn = document.getElementById("hn-send-btn");
+    const headerVoiceBtn = document.getElementById("hn-header-voice-btn");
+    const hasText = !!(input && input.value.trim().length > 0);
+    const voiceEnabled = !!(hnWidgetSettings.enableVoice && hnRecognition && hnHasStartedChat);
+
+    if (headerVoiceBtn) headerVoiceBtn.style.display = voiceEnabled ? "flex" : "none";
+
+    if (hasText) {
+        if (micBtn) micBtn.style.display = "none";
+        if (sendBtn) sendBtn.style.display = "flex";
+        return;
+    }
+
+    if (sendBtn) sendBtn.style.display = "none";
+    if (micBtn) micBtn.style.display = "none";
+}
+
+function hnOpenVoiceScreen() {
+    if (!hnHasStartedChat) {
+        alert("Start the chat first to use Talk to AI.");
+        return;
+    }
+    if (!hnWidgetSettings.enableVoice) {
+        alert("Voice replies are not enabled for this assistant.");
+        return;
+    }
+    if (!hnRecognition) { alert("Voice recognition is not supported in this browser. Please type your message."); return; }
+    document.getElementById("hn-voice-overlay").style.display = "flex";
+    hnOrbClicked();
+}
+
+function hnCloseVoiceScreen() {
+    document.getElementById("hn-voice-overlay").style.display = "none";
+    if (hnIsRecording) { hnRecognition.stop(); }
+    if (hnCurrentAudio) { hnCurrentAudio.pause(); hnCurrentAudio = null; }
+    hnResetOrbState();
+}
+
+function hnOrbClicked() {
+    if (hnCurrentAudio && !hnCurrentAudio.paused) {
+        hnCurrentAudio.pause();
+        hnCurrentAudio = null;
+        hnResetOrbState();
+        setTimeout(() => { hnRecognition.start(); }, 50);
+        return;
+    }
+
+    if (hnIsRecording) { hnRecognition.stop(); hnResetOrbState(); }
+    else { hnRecognition.start(); }
+}
+
+function hnSendVoiceNow() {
+    clearTimeout(hnVoiceTimeout);
+    if (hnVoiceSendLocked || hnVoiceUiBusy || hnIsSendingMessage) return;
+    if (!document.getElementById("hn-chat-input").value.trim()) {
+        hnResetOrbState();
+        return;
+    }
+
+    hnVoiceSendLocked = true;
+    hnVoiceUiBusy = true;
+    document.getElementById("hn-main-orb").className = "hn-orb hn-orb-thinking";
+    document.getElementById("hn-voice-status").innerText = "Thinking...";
+    document.getElementById("hn-voice-send-btn").style.display = "none";
+    if (hnIsRecording) { hnRecognition.stop(); }
+    hnSendMessage();
+}
+
+function hnSetVoiceTranscript(text, mode) {
+    const transcriptEl = document.getElementById("hn-voice-transcript");
+    if (!transcriptEl) return;
+
+    const activeMode = mode === "active" || mode === "speaking";
+    transcriptEl.classList.toggle("hn-voice-transcript-active", activeMode);
+    transcriptEl.innerText = text || "";
+}
+
+function hnBuildVoiceSpeakingPreview(reply) {
+    const normalized = (reply || "").toString().replace(/\s+/g, " ").trim();
+    if (!normalized) return "";
+
+    const sentences = normalized.match(/[^.!?]+[.!?]+["')\]]*|[^.!?]+$/g) || [normalized];
+    const preview = sentences.slice(0, 3).join(" ").trim();
+    if (!preview) return normalized;
+
+    if (sentences.length <= 3 && preview.length >= normalized.length) {
+        return preview;
+    }
+
+    return preview.replace(/[.!?]+$/, "").trim() + "...";
+}
+
+function hnResetOrbState() {
+    document.getElementById("hn-main-orb").className = "hn-orb";
+    document.getElementById("hn-voice-status").innerText = "Tap waveform to speak";
+    hnSetVoiceTranscript("");
+    document.getElementById("hn-voice-send-btn").style.display = "none";
+    hnVoiceUiBusy = false;
+    hnVoiceSendLocked = false;
+}
+
+function hnScrollToBottom() {
+    const container = document.getElementById("hn-chat-messages");
+    if (container) {
+        container.scrollTop = container.scrollHeight;
+        setTimeout(() => { container.scrollTop = container.scrollHeight; }, 30);
+    }
+}
+
+function hnScrollToTop() {
+    const container = document.getElementById("hn-chat-messages");
+    if (container) {
+        container.scrollTop = 0;
+        setTimeout(() => { container.scrollTop = 0; }, 30);
+    }
+}
+
+function hnLinkify(text) {
+    const imgRegex = /!\[([^\]]*)\]\((https?:\/\/[^\s)]+)\)/g;
+    let htmlText = text.replace(imgRegex, function(fullMatch, altText, imgUrl) {
+        return '<img src="' + imgUrl + '" alt="' + altText + '" style="max-width: 100%; border-radius: 12px; margin-top: 10px; margin-bottom: 5px; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 4px 12px rgba(0,0,0,0.08); display: block;" />';
+    });
+    const markdownLinkRegex = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+    htmlText = htmlText.replace(markdownLinkRegex, function(fullMatch, label, url) {
+        return '<a href="' + url + '" target="_blank">' + label + '</a>';
+    });
+    htmlText = htmlText.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+    htmlText = htmlText.replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, "$1<em>$2</em>");
+    const urlRegex = /(<[^>]+>)|(https?:\/\/[^\s]+)/g;
+    htmlText = htmlText.replace(urlRegex, function(match, htmlTag, url) {
+        if (htmlTag) return htmlTag;
+        if (url) {
+            const cleanUrl = url.replace(/[.,;!?)]+$/, "");
+            const punctuation = url.substring(cleanUrl.length);
+            return '<a href="' + cleanUrl + '" target="_blank">' + cleanUrl + "</a>" + punctuation;
+        }
+    });
+    return htmlText;
+}
+
+function hnShowFormError(message) {
+    const errDiv = document.getElementById("hn-form-error");
+    errDiv.innerText = message;
+    errDiv.style.display = "block";
+    setTimeout(() => { errDiv.style.display = "none"; }, 4000);
+}
+
+function hnAutoGrow(element) {
+    element.style.height = "auto";
+    element.style.height = element.scrollHeight + "px";
+}
+
+function hnHandleInput(element) {
+    hnAutoGrow(element);
+    hnUpdateComposerButtons();
+}
+
+function hnRenderQuickReplies() {
+    const container = document.getElementById("hn-quick-replies-container");
+    if (!container) return;
+
+    container.innerHTML = "";
+    hnCachedQuickReplies.forEach(qr => {
+        const btn = document.createElement("button");
+        btn.className = "hn-qr-btn";
+        btn.innerText = qr;
+        btn.onclick = () => {
+            const input = document.getElementById("hn-chat-input");
+            input.value = qr;
+            hnHandleInput(input);
+            hnSendMessage();
+        };
+        container.appendChild(btn);
+    });
+
+    if (hnHasStartedChat && hnChatHistory.length === 0) {
+        container.style.display = "flex";
+    }
+}
+
+function hnResetInactivityTimer() {
+    clearTimeout(hnInactivityTimer);
+    if (document.getElementById("hn-chat-messages").style.display === "flex" && hnChatHistory.length > 0) {
+        hnInactivityTimer = setTimeout(async () => {
+            try {
+                await fetch(WEBHOOK_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: JSON.stringify({
+                        isTimeout: true,
+                        sessionId: hnSessionId
+                    })
+                });
+            } catch (e) {}
+        }, hnWidgetSettings.inactivityTimeoutSeconds * 1000);
+    }
+}
+
+async function hnPreloadSettings() {
+    try {
+        const res = await fetch(WEBHOOK_URL, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({ type: "get_settings" })
+        });
+        const data = await res.json();
+        hnDynamicBotName = data.botName || hnDynamicBotName;
+        hnWidgetSettings = hnNormalizeWidgetSettings(data);
+        hnSettingsLoaded = true;
+        hnApplyWidgetSettings(hnWidgetSettings);
+
+        if (data.quickReplies && data.quickReplies.length > 0) {
+            hnCachedQuickReplies = data.quickReplies;
+            hnRenderQuickReplies();
+        }
+    } catch (e) {
+        hnSettingsLoaded = true;
+        hnApplyWidgetSettings(hnWidgetSettings);
+    }
+}
+hnPreloadSettings();
+
+function hnHandleCalloutClick() {
+    const promo = hnWidgetSettings.promo || {};
+    hnPromoTriggeredOpen =
+        hnWidgetSettings.attentionMode === "promotion" &&
+        promo.isActive &&
+        promo.entryMode === "callout-trigger" &&
+        !hnPromoDismissed;
+    hnToggleChat();
+}
+
+function hnToggleChat() {
+    const win = document.getElementById("hn-chat-window");
+    const callout = document.getElementById("hn-chat-callout");
+    const openingPromoFirst = win.style.display !== "flex" && !hnHasStartedChat && hnShouldUsePromoEntry();
+
+    if (win.style.display === "flex") {
+        win.style.display = "none";
+        hnCloseVoiceScreen();
+        hnPromoTriggeredOpen = false;
+        return;
+    }
+
+    win.style.display = "flex";
+    if (callout) callout.classList.remove("hn-show-callout");
+    hnOpenChatExperience();
+    if (openingPromoFirst) {
+        hnScrollToTop();
+    } else {
+        hnScrollToBottom();
+    }
+}
+
+function hnOpenChatExperience() {
+    if (hnHasStartedChat) return;
+    const promoFirst = hnShouldUsePromoEntry();
+
+    if (hnWidgetSettings.leadCaptureMode === "required") {
+        document.getElementById("hn-pre-chat-form").style.display = "flex";
+        document.getElementById("hn-chat-messages").style.display = "none";
+        document.getElementById("hn-chat-input-area").style.display = "none";
+        hnRenderPromoPreview(promoFirst);
+    } else {
+        hnBeginChatSession({ skipLeadCapture: true, promoFirst: promoFirst, suppressWelcome: promoFirst });
+    }
+}
+
+function hnStartChat() {
+    hnBeginChatSession({
+        skipLeadCapture: false,
+        promoFirst: hnShouldUsePromoEntry(),
+        suppressWelcome: hnShouldUsePromoEntry()
+    });
+}
+
+function hnBeginChatSession(options) {
+    if (hnHasStartedChat) return;
+
+    const skipLeadCapture = !!options.skipLeadCapture;
+    const promoFirst = !!options.promoFirst;
+    const suppressWelcome = !!options.suppressWelcome;
+
+    if (skipLeadCapture) {
+        hnUserName = "";
+        hnUserEmail = "";
+        hnUserPhone = "";
+    } else {
+        hnUserName = document.getElementById("hn-lead-name").value.trim();
+        hnUserEmail = document.getElementById("hn-lead-email").value.trim();
+        hnUserPhone = document.getElementById("hn-lead-phone").value.trim();
+
+        if (!hnUserName || hnUserName.length < 2) { hnShowFormError("Please enter your full name."); return; }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(hnUserEmail)) { hnShowFormError("Please enter a valid email address."); return; }
+        const phoneDigits = (hnUserPhone.match(/\d/g) || []).length;
+        if (phoneDigits < 7 || phoneDigits > 15) { hnShowFormError("Please enter a valid phone number (7-15 digits)."); return; }
+    }
+
+    hnHasStartedChat = true;
+    document.getElementById("hn-pre-chat-form").style.display = "none";
+    document.getElementById("hn-chat-messages").style.display = "flex";
+    document.getElementById("hn-chat-input-area").style.display = "flex";
+    hnRenderPromoPreview(false);
+    hnUpdateComposerButtons();
+
+    if (hnCachedQuickReplies.length > 0 && !promoFirst) {
+        hnRenderQuickReplies();
+        document.getElementById("hn-quick-replies-container").style.display = "flex";
+    } else {
+        document.getElementById("hn-quick-replies-container").style.display = "none";
+    }
+
+    if (promoFirst) {
+        hnAppendPromoCard({ keepTopVisible: true });
+    }
+    if (!suppressWelcome) {
+        hnAppendMessage(hnBuildWelcomeMessage(), "ai");
+    }
+    hnPromoTriggeredOpen = false;
+    hnResetInactivityTimer();
+}
+
+function hnAppendMessage(text, sender) {
+    const container = document.getElementById("hn-chat-messages");
+    const msgDiv = document.createElement("div");
+    msgDiv.className = "hn-message hn-" + sender + "-message";
+    msgDiv.innerHTML = hnLinkify(text).replace(/\n/g, "<br>");
+    container.appendChild(msgDiv);
+    hnScrollToBottom();
+}
+
+async function hnSendMessage() {
+    if (hnIsSendingMessage) return;
+    const input = document.getElementById("hn-chat-input");
+    const text = input.value.trim();
+    if (!text) return;
+    hnIsSendingMessage = true;
+
+    document.getElementById("hn-quick-replies-container").style.display = "none";
+    hnAppendMessage(text, "user");
+    input.value = "";
+    input.style.height = "auto";
+    hnResetInactivityTimer();
+    hnUpdateComposerButtons();
+
+    const typing = document.createElement("div");
+    typing.id = "hn-typing-indicator";
+    typing.className = "hn-typing-indicator";
+    typing.innerHTML = "<span></span><span></span><span></span>";
+    document.getElementById("hn-chat-messages").appendChild(typing);
+    hnScrollToBottom();
+
+    try {
+        const res = await fetch(WEBHOOK_URL, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({
+                text: text,
+                history: hnChatHistory,
+                sessionId: hnSessionId,
+                userName: hnUserName,
+                userEmail: hnUserEmail,
+                userPhone: hnUserPhone,
+                scrapedContext: window.hnScrapedContext || "",
+                pageUrl: window.location.href,
+                pageTitle: document.title,
+                leadCaptureMode: hnWidgetSettings.leadCaptureMode
+            })
+        });
+        const data = await res.json();
+        const indicator = document.getElementById("hn-typing-indicator");
+        if (indicator) indicator.remove();
+        hnAppendMessage(data.reply, "ai");
+
+        if (data.audioBase64 && document.getElementById("hn-voice-overlay").style.display === "flex") {
+            document.getElementById("hn-main-orb").className = "hn-orb hn-orb-speaking";
+            document.getElementById("hn-voice-status").innerText = "Speaking...";
+            hnSetVoiceTranscript(hnBuildVoiceSpeakingPreview(data.reply), "speaking");
+            document.getElementById("hn-voice-send-btn").style.display = "none";
+            hnVoiceUiBusy = true;
+
+            hnCurrentAudio = new Audio("data:audio/mp3;base64," + data.audioBase64);
+            hnCurrentAudio.onended = function() {
+                hnVoiceUiBusy = false;
+                hnVoiceSendLocked = false;
+                if (document.getElementById("hn-voice-overlay").style.display === "flex") hnResetOrbState();
+            };
+            hnCurrentAudio.play().catch(e => console.log(e));
+        } else {
+            hnVoiceUiBusy = false;
+            hnVoiceSendLocked = false;
+            if (document.getElementById("hn-voice-overlay").style.display === "flex") hnResetOrbState();
+        }
+
+        hnChatHistory.push({ role: "user", parts: [{ text: text }] }, { role: "model", parts: [{ text: data.reply }] });
+        hnResetInactivityTimer();
+    } catch (e) {
+        if (document.getElementById("hn-typing-indicator")) document.getElementById("hn-typing-indicator").remove();
+        hnVoiceUiBusy = false;
+        hnVoiceSendLocked = false;
+        hnResetOrbState();
+    } finally {
+        hnIsSendingMessage = false;
+    }
+}
+
+function hnHandleEnter(e) {
+    hnResetInactivityTimer();
+    if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        hnSendMessage();
+    }
+}
+
+function hnRestartChat() {
+    hnChatHistory = [];
+    hnSessionId = Date.now().toString(36);
+    hnHasStartedChat = false;
+    hnUserName = "";
+    hnUserEmail = "";
+    hnUserPhone = "";
+    hnPromoTriggeredOpen = false;
+    clearTimeout(hnInactivityTimer);
+
+    document.getElementById("hn-chat-messages").innerHTML = "";
+    document.getElementById("hn-chat-messages").style.display = "none";
+    document.getElementById("hn-pre-chat-form").style.display = "flex";
+    document.getElementById("hn-chat-input-area").style.display = "none";
+    document.getElementById("hn-quick-replies-container").style.display = "none";
+    hnRenderPromoPreview(false);
+
+    const input = document.getElementById("hn-chat-input");
+    input.value = "";
+    input.style.height = "auto";
+
+    hnUpdateComposerButtons();
+
+    if (hnWidgetSettings.leadCaptureMode !== "required") {
+        document.getElementById("hn-pre-chat-form").style.display = "none";
+    }
+
+    hnCloseVoiceScreen();
+    hnConfigureAttentionFeature(hnWidgetSettings);
+    if (document.getElementById("hn-chat-window").style.display === "flex") hnOpenChatExperience();
+}
+</script>
